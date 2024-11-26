@@ -107,6 +107,8 @@ class ActivityModel
                 case str_contains($row['option_name'], "activity_slot"):
                     $this->slot = $row['option_value'];
                     break;
+                default:
+                    return null;
             }
         }
     }
@@ -130,7 +132,7 @@ class ActivityModel
 
         $obj = $wpdb->get_row( $wpdb->prepare( "SELECT option_name FROM $wpdb->options WHERE option_value = %s", $id ));
         if($obj !== null) {
-            $secondParam = str_replace("_calendar_plugin_data|activity_hidden_id|", "", $obj->option_name);
+            $secondParam = str_replace("_calendar_plugin_data|activity_hidden_id", "", $obj->option_name);
             $secondParam = str_replace("|0|value", "|%|value", $secondParam);
             return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->options WHERE option_name LIKE '_calendar_plugin_data%' AND option_name LIKE %s", '%' . $secondParam ), ARRAY_A );
         }
