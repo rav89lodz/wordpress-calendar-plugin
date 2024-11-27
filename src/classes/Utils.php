@@ -23,18 +23,19 @@ class Utils
         return ["message" => str_replace('{name}', $name, $message), "code" => $code];
     }
 
+    
     public function array_of_object_to_flat_array($array) {
         $toReturn = [];
+
         if(isset($array) && is_array($array)) {
-            foreach($array as $key => $value) {
-                if (count($value) > 0) {
-                    $value = array_values($value);
-                    $temp_key = strtolower(str_replace(" ", "_", $value[0]));
-                    $temp_key = $this->remove_polish_letters($temp_key);
-                    $toReturn[$temp_key] = $value[0];
+            for($i = 0; $i < count($array); $i += 2) {
+                if(! isset($array[$i + 1]) || $array[$i + 1]['option_value'] === null) {
+                    continue;
                 }
+                $toReturn[$array[$i + 1]['option_value']] = $array[$i]['option_value'];
             }
         }
+
         return $toReturn;
     }
 
@@ -94,7 +95,7 @@ class Utils
         $result = str_replace($specialChars, $polishHtmlCodes, json_encode($string));
         return json_decode($result);
     }
-
+    
     public function remove_polish_letters($string) {
         $polishLetters = [
             'ą',
@@ -105,9 +106,18 @@ class Utils
             'ó',
             'ś',
             'ź',
-            'ż'
+            'ż',
+            'Ą',
+            'Ć',
+            'Ę',
+            'Ł',
+            'Ń',
+            'Ó',
+            'Ś',
+            'Ź',
+            'Ż'
         ];
-        
+
         $toReplace = [
             'a',
             'c',
@@ -117,11 +127,21 @@ class Utils
             'o',
             's',
             'z',
-            'z'
+            'z',
+            'A',
+            'C',
+            'E',
+            'L',
+            'N',
+            'O',
+            'S',
+            'Z',
+            'Z'
         ];
-
+        
         return str_replace($polishLetters, $toReplace, $string);
     }
+
 
     public function prepare_current_short_codes($shortCodes) {
         $preDefinedToSkip = ['[calendar-grid1]', '[contact-form-calendar1]'];

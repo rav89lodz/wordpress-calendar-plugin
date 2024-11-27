@@ -39,6 +39,23 @@ class ReservationService
         return $currentlimit->limit;
     }
 
+    public function get_user_friendly_reservation_names($name) {
+        switch($name) {
+            case 'user_name':
+                return 'Imię i nazwisko';
+            case 'user_email':
+                return 'Adres email';
+            case 'reservation_date':
+                return 'Data rezerwacji zajęć';
+            case 'reservation_time':
+                return 'Godzina rezerwacji zajęć';
+            case 'activity_name':
+                return 'Nazwa zajęć';
+            default:
+                return "";
+        }
+    }
+
     private function store_reservation_data($model) {
         $message = "<h2>Wiadomość od {$model->get_user_name()}</h2>";
 

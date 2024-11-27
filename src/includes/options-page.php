@@ -10,7 +10,11 @@ use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 
 add_action('after_setup_theme', 'load_carbon_fields_for_calendar_plugin');
+
+add_filter( 'carbon_fields_theme_options_container_admin_only_access', '__return_false' );
+
 add_action('carbon_fields_register_fields', 'create_options_page_for_calendar_plugin');
+
 add_action('carbon_fields_theme_options_container_saved', function() {
     $optionsPageService = new OptionsPageService;
     $optionsPageService->update_data_after_save();
@@ -52,6 +56,10 @@ function create_options_page_for_calendar_plugin() {
             Field::make( 'checkbox', 'calendar_plugin_make_rsv_by_calendar', __( 'Umożliwić zapis na zajęcia poprzez kliknięcie na kalendarzu' ) )
                 ->set_option_value( '1' )
                 ->set_help_text( 'Po kliknięciu na wybrane pole w kalendarzu pojawi się formularz zapisu na zajęcia. Formularz uwzględnia limit miejsc na zajęciach' ),
+
+            Field::make( 'checkbox', 'calendar_plugin_fluent_calendar_grid', __( 'Przenikanie kafelka z kolorem zajęć' ) )
+                ->set_option_value( '1' )
+                ->set_help_text( 'Kafelek z kolorem będzie rozciągnięty w godzinach trwania zajęć. Ustaw, jeżeli zajęcia nie nakładają się na siebie' ),
 
             Field::make( 'text', 'calendar_plugin_recipients', __( 'Adres e-mail' ) )
                 ->set_attribute( 'placeholder', 'email@email.com' )

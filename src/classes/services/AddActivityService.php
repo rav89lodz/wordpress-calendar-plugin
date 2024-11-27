@@ -25,6 +25,25 @@ class AddActivityService
 
         return $this->utils->set_success_error_message_with_code($this->model->get_activity_user_name(), $code, $message);
     }
+    
+    public function get_user_friendly_names($name) {
+        switch($name) {
+            case 'add_activity_user_name':
+                return 'Imię i nazwisko';
+            case 'add_activity_user_email':
+                return 'Adres email';
+            case 'add_activity_date':
+                return 'Proponowana data zajęć';
+            case 'add_activity_time':
+                return 'Godzina rozpoczęcia';
+            case 'add_activity_duration':
+                return 'Czas trwania w minutach';
+            case 'add_activity_name':
+                return 'Nazwa zajęć';
+            default:
+                return "";
+        }
+    }
 
     private function store_activity_data($model) {
         $message = "<h2>Wiadomość od {$model->get_activity_user_name()}</h2>";

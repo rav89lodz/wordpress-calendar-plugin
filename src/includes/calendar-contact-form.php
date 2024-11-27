@@ -53,16 +53,23 @@ function create_add_activity_page() {
     register_post_type('add_activity', $args);
 }
 
+add_action('add_meta_boxes', 'create_meta_box_for_add_activity');
+
+function create_meta_box_for_add_activity() {
+    add_meta_box('custom_calendar_form', 'Rezerwacja zajęć', 'display_add_activity', 'add_activity');
+}
 
 function display_add_activity() {
     $data = get_post_meta(get_the_ID());
+    $service = new AddActivityService();
+
     unset($data['_edit_lock']);
     unset($data['_edit_last']);
 
     echo "<ul>";
 
     foreach ($data as $key => $value) {
-        echo "<li><strong>" . ucfirst($key) . "</strong>:<br>" . $value[0] . "</li>";
+        echo "<li><strong>" . $service->get_user_friendly_names($key) . "</strong>:<br>" . $value[0] . "</li>";
     }
 
     echo "</ul>";

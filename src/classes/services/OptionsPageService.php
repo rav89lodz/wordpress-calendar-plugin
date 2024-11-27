@@ -15,7 +15,7 @@ class OptionsPageService
     public function get_activity_types() {
         global $wpdb;
     
-        $rows = $wpdb->get_results( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name like %s", '_calendar_plugin_types|type_name%' ), ARRAY_A );
+        $rows = $wpdb->get_results( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name like %s", '_calendar_plugin_types|type_%' ), ARRAY_A );
     
         if($rows !== null && is_array($rows)) {
             $utils = new Utils;
@@ -40,8 +40,8 @@ class OptionsPageService
 
     public function create_short_code($code) {
         $utils = new Utils;
-        $short = strtolower(str_replace(" ", "_", $code));
-        $short = $utils->remove_polish_letters($short);
+        $short = $utils->remove_polish_letters($code);
+        $short = strtolower(str_replace(" ", "_", $short));
         return $short;
     }
 

@@ -138,11 +138,23 @@ class CalendarService
     
         for ($day = 1; $day <= 7; $day++) {
             if (!empty($groupedActivities[$currentTime][$day])) {
-                echo "<td>";
+
+                if(empty(get_calendar_plugin_options('calendar_plugin_fluent_calendar_grid'))) {
+                    echo "<td>";
+                }
+                else {
+                    echo "<td><div class='flex-cell'>";
+                }
+                
                 foreach ($groupedActivities[$currentTime][$day] as $activity) {
                     $this->get_row_with_activity($activity, $currentTime, $day);
                 }
-                echo "</td>";
+                if(empty(get_calendar_plugin_options('calendar_plugin_fluent_calendar_grid'))) {
+                    echo "</td>";
+                }
+                else {
+                    echo "</div></td>";
+                }
             }
             else {
                 echo "<td></td>";
@@ -154,11 +166,11 @@ class CalendarService
     private function get_row_with_activity($activity, $currentTime, $day) {
         $id = $activity->get_hidden_id() . "_" . $currentTime . "_" . $day;
         $limit = $this->service->check_reservation_limit($activity->get_hidden_id(), $this->datesOnThisWeek[$day - 1]);
-        if($limit >= $activity->get_slot()) {
-            echo "<div class='limit-over' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
+        if($limit >= $activity->get_slot() || empty(get_calendar_plugin_options('calendar_plugin_make_rsv_by_calendar'))) {
+            echo "<div class='calendar-event cursor-default' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
         }
         else {
-            echo "<div class='calendar-event' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
+            echo "<div class='calendar-event cursor-pointer' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
         }
         echo "<span>" . htmlspecialchars($activity->get_duration()) . " min</span>";
         echo "<p class='text-wrap' style='font-weight: bold;'>" . htmlspecialchars($activity->get_name()) . "</p>";

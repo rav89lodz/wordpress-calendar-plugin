@@ -108,7 +108,7 @@ function modal_setup() {
                     table_field = e.target.parentNode;
                 }
 
-                if(table_field.classList.contains('limit-over')) {
+                if(table_field.classList.contains('cursor-default')) {
                     modal_object2.show();
                 }
                 else {

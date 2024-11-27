@@ -100,13 +100,16 @@ function create_meta_box_for_calendar_plugin() {
 
 function display_reservation() {
     $data = get_post_meta(get_the_ID());
+    $service = new ReservationService();
+
     unset($data['_edit_lock']);
     unset($data['_edit_last']);
+    unset($data['reservation_id']);
 
     echo "<ul>";
 
     foreach ($data as $key => $value) {
-        echo "<li><strong>" . ucfirst($key) . "</strong>:<br>" . $value[0] . "</li>";
+        echo "<li><strong>" . $service->get_user_friendly_reservation_names($key) . "</strong>:<br>" . $value[0] . "</li>";
     }
 
     echo "</ul>";
