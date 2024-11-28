@@ -1,5 +1,6 @@
 <?php
 
+use CalendarPlugin\src\classes\services\LanguageService;
 use CalendarPlugin\src\classes\services\ReservationService;
 use CalendarPlugin\src\classes\Utils;
 
@@ -71,15 +72,16 @@ function handle_calendar_grid_form_registration_for_activity($data) {
 add_action('init', 'create_reservation_page');
 
 function create_reservation_page() {
+    $service = new LanguageService;
     $args = [
         'public' => true,
         'has_archive' => true,
         'menu_position' => 80,
         'publicly_queryable' => false,
-        'description' => 'Zapisy na zajęcia',
+        'description' => $service->reservationMenu['description'],
         'labels' => [
-            'name' => 'Zapisy na zajęcia',
-            'singular_name' => 'Zapis na zajęcia',
+            'name' => $service->reservationMenu['name'],
+            'singular_name' => $service->reservationMenu['singular_name'],
         ],
         'capability_type' => 'post',
         'capabilities' => [
@@ -95,12 +97,13 @@ function create_reservation_page() {
 add_action('add_meta_boxes', 'create_meta_box_for_calendar_plugin');
 
 function create_meta_box_for_calendar_plugin() {
-    add_meta_box('custom_calendar_form', 'Zapis na zajęcia', 'display_reservation', 'reservation');
+    $service = new LanguageService;
+    add_meta_box('custom_calendar_form', $service->reservationMenu['meta_box_title'], 'display_reservation', 'reservation');
 }
 
 function display_reservation() {
     $data = get_post_meta(get_the_ID());
-    $service = new ReservationService();
+    $service = new LanguageService;
 
     unset($data['_edit_lock']);
     unset($data['_edit_last']);
@@ -109,45 +112,30 @@ function display_reservation() {
     echo "<ul>";
 
     foreach ($data as $key => $value) {
-        echo "<li><strong>" . $service->get_user_friendly_reservation_names($key) . "</strong>:<br>" . $value[0] . "</li>";
+        echo "<li><strong>" . $service->reservationFriendlyNames[$key] . "</strong>:<br>" . $value[0] . "</li><br>";
     }
 
     echo "</ul>";
 }
 
-add_filter('manage_reservation_posts_columns', 'custom_reservation_columns'); // manage_{post-type}_posts_columns
+add_filter('manage_reservation_posts_columns', 'custom_reservation_columns');
 
 function custom_reservation_columns($columns) {
+    $service = new LanguageService;
     return [
         'cb' => $columns['cb'],
-        'user_name' => 'Imię i nazwisko', // calendar-plugin = Text Domain from calendar-plugin.php
-        'user_email' => 'Adres email',
-        'activity_name' => 'Nazwa zajęć',
-        'reservation_date' => 'Data rezerwacji',
-        'reservation_time' => 'Godzina rezerwacji',
+        'user_name' => $service->reservationFriendlyNames['user_name'],
+        'user_email' => $service->reservationFriendlyNames['user_email'],
+        'activity_name' => $service->reservationFriendlyNames['activity_name'],
+        'reservation_date' => $service->reservationFriendlyNames['reservation_date'],
+        'reservation_time' => $service->reservationFriendlyNames['reservation_time'],
     ];
 }
 
-add_action('manage_reservation_posts_custom_column', 'fill_reservation_columns', 10, 2); // manage_{post-type}_posts_custom_column
+add_action('manage_reservation_posts_custom_column', 'fill_reservation_columns', 10, 2);
 
 function fill_reservation_columns($column, $postId) {
-    switch ($column) {
-        case 'user_name':
-            echo get_post_meta($postId, 'user_name', true);
-            break;
-        case 'user_email':
-            echo get_post_meta($postId, 'user_email', true);
-            break;
-        case 'activity_name':
-            echo get_post_meta($postId, 'activity_name', true);
-            break;
-        case 'reservation_date':
-            echo get_post_meta($postId, 'reservation_date', true);
-            break;
-        case 'reservation_time':
-            echo get_post_meta($postId, 'reservation_time', true);
-            break;
-    }
+    echo get_post_meta($postId, $column, true);
 }
 
 add_action('admin_init', 'setup_search_for_calendar_grid_plugin');

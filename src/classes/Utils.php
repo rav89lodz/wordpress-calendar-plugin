@@ -2,22 +2,29 @@
 
 namespace CalendarPlugin\src\classes;
 
+use CalendarPlugin\src\classes\models\MessageModel;
+use CalendarPlugin\src\classes\services\LanguageService;
+
 class Utils
 {
     private $adminEmail;
     private $adminName;
+    private $model;
+    private $service;
 
     public function __construct() {
         $this->adminEmail = strtolower(trim(get_calendar_plugin_options('calendar_plugin_recipients') ?? get_bloginfo('admin_email')));
         $this->adminName = get_bloginfo('name');
+        $this->model = new MessageModel;
+        $this->service = new LanguageService;
     }
 
     public function set_success_error_message_with_code($name, $code, $messageSuccess) {
         if($messageSuccess === false) {
-            $message = get_calendar_plugin_options('calendar_plugin_message_error') ?? 'Wiadmość została wysłana. Rezerwacja odrzucona';
+            $message = $this->model->get_message_error() ??  $this->service->calendarLabels['default_error_message'];
         }
         else {
-            $message = get_calendar_plugin_options('calendar_plugin_message_success') ?? 'Wiadmość została wysłana. Rezerwacja dokonana';
+            $message = $this->model->get_message_success() ?? $this->service->calendarLabels['default_success_message'];
         }
         $message = $this->set_up_polish_characters($message);
         return ["message" => str_replace('{name}', $name, $message), "code" => $code];

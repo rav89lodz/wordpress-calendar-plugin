@@ -6,7 +6,7 @@
  * Description:       Calendar Plugin for modern term reservation form
  * Version:           1.0.0
  * Requires at least: 6.6.2
- * Requires PHP:      8.1
+ * Requires PHP:      7.2
  * Author:            Rafał Chęciński
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -37,6 +37,7 @@ if (! class_exists('CalendarPlugin')) {
 
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/services/AddActivityService.php');
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/services/CalendarService.php');
+            require_once(CALENDAR_PLUGIN_PATH . '/src/classes/services/LanguageService.php');
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/services/OptionsPageService.php');
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/services/ReservationService.php');
 
@@ -46,6 +47,7 @@ if (! class_exists('CalendarPlugin')) {
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/models/ActivityModel.php');
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/models/AddActivityModel.php');
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/models/CalendarModel.php');
+            require_once(CALENDAR_PLUGIN_PATH . '/src/classes/models/MessageModel.php');
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/models/ReservationModel.php');
         }
     }

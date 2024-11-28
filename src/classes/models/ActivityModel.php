@@ -7,6 +7,7 @@ class ActivityModel
     private $hiddenID;
     private $name;
     private $startAt;
+    private $endAt;
     private $duration;
     private $isCyclic;
     private $date;
@@ -32,11 +33,11 @@ class ActivityModel
         return $this->startAt;
     }
 
+    public function get_end_at() {
+        return $this->endAt;
+    }
+
     public function get_duration() {
-        if(str_contains($this->duration, ":")) {
-            $timeInMinutes = explode(":", $this->duration);
-            return 60 * $timeInMinutes[0] + $timeInMinutes[1];
-        }
         return $this->duration;
     }
 
@@ -85,8 +86,8 @@ class ActivityModel
                 case str_contains($row['option_name'], "start_at"):
                     $this->startAt = $row['option_value'];
                     break;
-                case str_contains($row['option_name'], "duration"):
-                    $this->duration = $row['option_value'];
+                case str_contains($row['option_name'], "end_at"):
+                    $this->endAt = $row['option_value'];
                     break;
                 case str_contains($row['option_name'], "cyclic"):
                     $this->isCyclic = $row['option_value'];
@@ -111,6 +112,23 @@ class ActivityModel
                     return null;
             }
         }
+        $this->duration = $this->set_duration();
+    }
+
+    private function set_duration() {
+        $time1Parts = explode(":", $this->endAt);
+        $time2Parts = explode(":", $this->startAt);
+        
+        $time1Minutes = (int)$time1Parts[0] * 60 + (int)$time1Parts[1];
+        $time2Minutes = (int)$time2Parts[0] * 60 + (int)$time2Parts[1];
+
+        $difference = $time1Minutes - $time2Minutes;
+        
+        if ($difference < 0) {
+            $difference += 1440;
+        }
+
+        return $difference;
     }
 
     private function get_activity_type($type) {

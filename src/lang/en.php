@@ -1,0 +1,151 @@
+<?php
+
+return [
+    'addActivityFriendlyNames' => [
+        'add_activity_user_name' => 'Imię i nazwisko',
+        'add_activity_user_email' => 'Adres email',
+        'add_activity_user_phone' => 'Numer telefonu',
+        'add_activity_date' => 'Proponowana data zajęć',
+        'add_activity_time_start' => 'Godzina rozpoczęcia zajęć',
+        'add_activity_time_end' => 'Godzina zakończenia zajęć',
+        'add_activity_name' => 'Nazwa zajęć',
+    ],
+
+    'reservationFriendlyNames' => [
+        'user_name' => 'Imię i nazwisko',
+        'user_email' => 'Adres email',
+        'reservation_date' => 'Data rezerwacji zajęć',
+        'reservation_time' => 'Godzina rezerwacji zajęć',
+        'activity_name' => 'Nazwa zajęć',
+        'reservation_id' => 'Unikalny numer zajęć',
+    ],
+
+    'addActivityMenu' => [
+        'description' => 'Rezerwacje terminów w kalnedarzu',
+        'name' => 'Rezerwacje',
+        'singular_name' => 'Rezerwacja',
+        'meta_box_title' => 'Rezerwacja zajęć'
+    ],
+
+    'reservationMenu' => [
+        'description' => 'Zapisy na zajęcia',
+        'name' => 'Zapisy na zajęcia',
+        'singular_name' => 'Zapis na zajęcia',
+        'meta_box_title' => 'Zapis na zajęcia'
+    ],
+
+    'addActivityMessage' => [
+        'subject' => 'Prośba o dopisanie zajęć do kalendarza',
+        'message_from' => 'Wiadomość od',
+        'post_title' => 'Dopisanie zajęć do kalendarza: ',
+        'message_beginning' => 'Prośba o dopisanie do kalendarza zajęć: ',
+    ],
+
+    'reservationMessage' => [
+        'subject' => 'Zapis na zajęcia z kalendarza rezerwacji',
+        'message_from' => 'Wiadomość od',
+        'post_title' => 'Zapis na zajęcia: ',
+        'message_beginning_success' => 'Zapisano na zajęcia',
+        'message_beginning_failure' => 'Nie zapisano na zajęcia z powodu przekroczenia limitu miejsc na zajęciach',
+    ],
+
+    'calendarLabels' => [
+        'label_activity_end_at' => 'Godzina zakończenia ',
+        'default_success_message' => 'Wiadmość została wysłana. Rezerwacja dokonana',
+        'default_error_message' => 'Wiadmość została wysłana. Rezerwacja odrzucona',
+    ],
+
+    'modalFormFriendlyNames' => [
+        'send' => 'Wyślij',
+        'cancel' => 'Anuluj',
+        'date_calendar_add_activity_text_muted' => 'W przypadku zajęć cyklicznych należy podać dni tygodnia',
+        'add_activity_title' => 'Formularz zgłoszenia zajęć w kalendarzu',
+        'reservation_title' => 'Zapis na zajęcia',
+        'reservation_limit_over_title' => 'Zapis na zajęcia - limit wyczerpany',
+        'reservation_limit_over_message' => 'Zapis na zajęcia jest niemożliwy. Limit miejsc został wyczerpany',
+        'reservation_limit_over_confirm' => 'Ok',
+        'add_activity_active_button' => 'Zgłoś zajęcia do kalendarza',
+        'user_name_calendar_add_activity' => 'Imię i nazwisko',
+        'user_email_calendar_add_activity' => 'Adres email',
+        'user_phone_calendar_add_activity' => 'Numer telefonu',
+        'date_calendar_add_activity' => 'Proponowana data zajęć',
+        'time_start_calendar_add_activity' => 'Godzina rozpoczęcia zajęć',
+        'time_end_calendar_add_activity' => 'Godzina zakończenia zajęć',
+        'name_calendar_add_activity' => 'Nazwa zajęć',
+        'reservation_day' => 'Zapis na zajęcia w dniu',
+        'reservation_hour' => 'o godzinie',
+    ],
+
+    'days' => [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+    ],
+
+    'months' => [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ],
+
+    'optionPage' => [
+        'main_menu_settings' => 'Ustawienia Kalendarza Rezerwacji',
+        'main_short_code' => 'Użyj tego kodu (short_code), żeby wyświetlić na stronie kalendarz z pełnymi danymi.',
+        'main_short_code_form' => 'Użyj tego kodu (short_code), żeby wyświetlić formularz kontaktowy, dzięki któremu będziesz otrzymywać wiadomości, że ktoś chce zarezerwować termin w kalendarzu.',
+        'main_menu_field1_name' => 'Umożliwić zapis na zajęcia poprzez kliknięcie na kalendarzu',
+        'main_menu_field1_description' => 'Po kliknięciu na wybrane pole w kalendarzu pojawi się formularz zapisu na zajęcia. Formularz uwzględnia limit miejsc na zajęciach',
+        'main_menu_field2_name' => 'Przenikanie kafelka z kolorem zajęć',
+        'main_menu_field2_description' => 'Kafelek z kolorem będzie rozciągnięty w godzinach trwania zajęć. Ustaw, jeżeli zajęcia nie nakładają się na siebie',
+        'main_menu_field3_name' => 'Wyświetlanie czasu zajęć',
+        'main_menu_field3_description' => 'Włącz tę opcję, jeśli na kafelku zajęć ma pokazywać się czas zajęć w minutach',
+        'main_menu_field4_name' => 'Wyświetlanie godziny zakończenia zajęć',
+        'main_menu_field4_description' => 'Włącz tę opcję, jeśli na kafelku zajęć ma pokazywać się godzina zakończenia zajęć',
+        'main_menu_field5_name' => 'Adres e-mail',
+        'main_menu_field5_description' => 'Adres e-mail, na który będą wysłane powiadomienia',
+        'main_menu_field6_name' => 'Treść powiadomienia o przyjętym zapisie na zajęcia',
+        'main_menu_field6_description' => 'Wpisz treść powiadomienia, którą chcesz, aby użytkownik otrzymał w przypdaku przyjętego zapisu na zajęcia. Możesz użyć {name} jako zmiennej',
+        'main_menu_field7_name' => 'Treść powiadomienia o odrzuconym zapisie na zajęcia',
+        'main_menu_field7_description' => 'Wpisz treść powiadomienia, którą chcesz, aby użytkownik otrzymał w przypdaku odrzucenia zapisu na zajęcia. Możesz użyć {name} jako zmiennej',
+        'main_menu_field8_name' => 'Treść powiadomienia potwierdzająca wysyłkę formularza rezerwacji',
+        'main_menu_field8_description' => 'Wpisz treść powiadomienia, którą chcesz, aby użytkownik otrzymał po wysłaniu formularza rezerwacji terminu w kalendarzu. Możesz użyć {name} jako zmiennej',
+        'main_menu_field9_name' => 'Początkowa godzina w kalendarzu',
+        'main_menu_field10_name' => 'Końcowa godzina w kalendarzu',
+        'main_menu_field11_name' => 'Interwał kalendarza',
+        'main_menu_field12_name' => 'Wyświetlanie miejsca zajęć',
+        'main_menu_field12_description' => 'Włącz tę opcję, jeśli na kafelku ma pokazywać się miejsce odbywania się zajęć',
+        'main_menu_textarea_field_placeholder' => 'Wpisz treść wiadomości',
+        'short_code_activity_place' => 'Użyj tego kodu (short_code), żeby wyświetlić na stronie kalendarz z danymi dla: ',
+        'activity_place_title' => 'Miejsca zajęć',
+        'activity_place_description' => 'Zdefiniuj miejsca, w których odbywają się zajęcia',
+        'activity_place_field1_name' => 'Nazwa miejsca',
+        'activity_place_field1_description' => 'Zdefiniuj nazwy miejesc, gdzie odbywają się zajęcia. Np. hala sportowa, sala nr 1, pływalnia',
+        'calendar_grid_data_title' => 'Zajęcia w kalendarzu',
+        'calendar_grid_data_description' => 'Zdefiniuj kalendarz rezerwacji',
+        'calendar_grid_data_field1_name' => 'Nazwa zajęć',
+        'calendar_grid_data_field2_name' => 'Godzina rozpoczęcia zajęć',
+        'calendar_grid_data_field3_name' => 'Godzina zakończenia zajęć',
+        'calendar_grid_data_field4_name' => 'Czy zajęcia cykliczna',
+        'calendar_grid_data_field5_name' => 'Data zajęcia',
+        'calendar_grid_data_field5_description' => 'Ustaw datę dla zajęcia występującego jednorazowo',
+        'calendar_grid_data_field6_name' => 'Wybierz dzień zajęć cyklicznych',
+        'calendar_grid_data_field7_name' => 'Kolor kafelka zajęć',
+        'calendar_grid_data_field7_description' => 'Wybierz kolor, którym chcesz wyróżnić zajęcia w kalendarzu',
+        'calendar_grid_data_field8_name' => 'Wybierz miejsce zajęć',
+        'calendar_grid_data_field8_description' => 'Wybierz, w którym miejscu (ze zdefiniowanych) odbywają się zajęcia',
+        'calendar_grid_data_field9_name' => 'Ile miejsc na zajęcia',
+        'calendar_grid_data_field9_description' => 'Zdefiniuj ile razy można zarezerować zajęcia. Minimalna wartość to 1',
+    ],
+];

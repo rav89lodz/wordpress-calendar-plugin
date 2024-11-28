@@ -9,17 +9,19 @@ class ReservationService
 {
     private $utils;
     private $model;
+    private $service;
 
     public function __construct($data = null) {
         $this->utils = new Utils;
         $this->model = new ReservationModel($data);
+        $this->service = new LanguageService;
     }
 
     public function get_response_after_reservation() {
         $message = $this->store_reservation_data($this->model);
         $message[0] = $this->utils->set_up_polish_characters($message[0]);
         $code = 200;
-        $subject = "Zapis na zajęcia z kalendarza rezerwacji";
+        $subject = $this->service->reservationMessage['subject'];
         $replayTo = ["name" => $this->model->get_user_name(), "email" => $this->model->get_user_email()];
         $this->utils->send_email_with_store_data($message[0], $subject, $replayTo);
         if($message[1] === false) {
@@ -39,37 +41,22 @@ class ReservationService
         return $currentlimit->limit;
     }
 
-    public function get_user_friendly_reservation_names($name) {
-        switch($name) {
-            case 'user_name':
-                return 'Imię i nazwisko';
-            case 'user_email':
-                return 'Adres email';
-            case 'reservation_date':
-                return 'Data rezerwacji zajęć';
-            case 'reservation_time':
-                return 'Godzina rezerwacji zajęć';
-            case 'activity_name':
-                return 'Nazwa zajęć';
-            default:
-                return "";
-        }
-    }
-
     private function store_reservation_data($model) {
-        $message = "<h2>Wiadomość od {$model->get_user_name()}</h2>";
+        $message = "<h2>" . $this->service->reservationMessage['message_from'] . " {$model->get_user_name()}</h2>";
 
         $activity = $model->get_activity();
 
         $limit = $this->check_reservation_limit($activity->get_hidden_id(), $model->get_reservation_date());
         if($limit >= $activity->get_slot()) {
-            $message .= "<div><strong style='color:red'>Nie zapisano na zajęcia z powodu przekroczenia limitu miejsc na zajęciach</strong></div><div><strong>Adres email</strong>: "
-                        . $model->get_user_email() . "</div><div><strong>Data rezerwacji</strong>: " . $model->get_reservation_date() . "</div><div><strong>Godzina rezerwacji</strong>: "
-                        . $model->get_reservation_time() . "</div><div><strong>Zajęcia</strong>: " . $activity->get_name();
+            $message .= "<div><strong style='color:red'>" . $this->service->reservationMessage['message_beginning_failure'] .
+                        "</strong></div><div><strong>" . $this->service->reservationFriendlyNames['user_email'] . "</strong>: " . $model->get_user_email() .
+                        "</div><div><strong>" . $this->service->reservationFriendlyNames['reservation_date'] . "</strong>: " . $model->get_reservation_date() .
+                        "</div><div><strong>" . $this->service->reservationFriendlyNames['reservation_time'] . "</strong>: " . $model->get_reservation_time() .
+                        "</div><div><strong>" . $this->service->reservationFriendlyNames['activity_name'] . "</strong>: " . $activity->get_name();
             return [$message, false];
         }
         $postId = wp_insert_post([
-            'post_title' => "Zapis na zajęcia: " . $model->get_user_name(),
+            'post_title' => $this->service->reservationMessage['post_title'] . $model->get_user_name(),
             'post_type' => 'reservation',
             'post_status' => 'publish',
         ]);
@@ -81,8 +68,11 @@ class ReservationService
         add_post_meta($postId, 'reservation_id', $activity->get_hidden_id());
         add_post_meta($postId, 'activity_name', $activity->get_name());
 
-        $message .= "<div><strong style='color:green'>Zapisano na zajęcia</strong></div><div><strong>Adres email</strong>: " . $model->get_user_email() . "</div><div><strong>Data rezerwacji</strong>: "
-                    . $model->get_reservation_date() . "</div><div><strong>Godzina rezerwacji</strong>: " . $model->get_reservation_time() . "</div><div><strong>Zajęcia</strong>: " . $activity->get_name();
+        $message .= "<div><strong style='color:green'>" . $this->service->reservationMessage['message_beginning_success'] .
+                    "</strong></div><div><strong>" . $this->service->reservationFriendlyNames['user_email'] . "</strong>: " . $model->get_user_email() .
+                    "</div><div><strong>" . $this->service->reservationFriendlyNames['reservation_date'] . "</strong>: " . $model->get_reservation_date() .
+                    "</div><div><strong>" . $this->service->reservationFriendlyNames['reservation_time'] . "</strong>: " . $model->get_reservation_time() .
+                    "</div><div><strong>" . $this->service->reservationFriendlyNames['activity_name'] . "</strong>: " . $activity->get_name();
 
         return [$message, true];
     }

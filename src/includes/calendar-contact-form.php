@@ -1,6 +1,7 @@
 <?php
 
 use CalendarPlugin\src\classes\services\AddActivityService;
+use CalendarPlugin\src\classes\services\LanguageService;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -32,15 +33,16 @@ function handle_calendar_form_add_activity($data) {
 add_action('init', 'create_add_activity_page');
 
 function create_add_activity_page() {
+    $service = new LanguageService;
     $args = [
         'public' => true,
         'has_archive' => true,
         'menu_position' => 80,
         'publicly_queryable' => false,
-        'description' => 'Rezerwacje terminów w kalnedarzu',
+        'description' => $service->addActivityMenu['description'],
         'labels' => [
-            'name' => 'Rezerwacje',
-            'singular_name' => 'Rezerwacja',
+            'name' => $service->addActivityMenu['name'],
+            'singular_name' => $service->addActivityMenu['singular_name'],
         ],
         'capability_type' => 'post',
         'capabilities' => [
@@ -56,12 +58,13 @@ function create_add_activity_page() {
 add_action('add_meta_boxes', 'create_meta_box_for_add_activity');
 
 function create_meta_box_for_add_activity() {
-    add_meta_box('custom_calendar_form', 'Rezerwacja zajęć', 'display_add_activity', 'add_activity');
+    $service = new LanguageService;
+    add_meta_box('custom_calendar_form', $service->addActivityMenu['meta_box_title'], 'display_add_activity', 'add_activity');
 }
 
 function display_add_activity() {
     $data = get_post_meta(get_the_ID());
-    $service = new AddActivityService();
+    $service = new LanguageService;
 
     unset($data['_edit_lock']);
     unset($data['_edit_last']);
@@ -69,7 +72,7 @@ function display_add_activity() {
     echo "<ul>";
 
     foreach ($data as $key => $value) {
-        echo "<li><strong>" . $service->get_user_friendly_names($key) . "</strong>:<br>" . $value[0] . "</li>";
+        echo "<li><strong>" . $service->addActivityFriendlyNames[$key] . "</strong>:<br>" . $value[0] . "</li><br>";
     }
 
     echo "</ul>";
@@ -78,40 +81,23 @@ function display_add_activity() {
 add_filter('manage_add_activity_posts_columns', 'custom_add_activity_columns');
 
 function custom_add_activity_columns($columns) {
+    $service = new LanguageService;
     return [
         'cb' => $columns['cb'],
-        'add_activity_user_name' => 'Imię i nazwisko',
-        'add_activity_user_email' => 'Adres email',
-        'add_activity_name' => 'Nazwa zajęć',
-        'add_activity_date' => 'Data rezerwacji',
-        'add_activity_time' => 'Godzina rezerwacji',
-        'add_activity_duration' => 'Czas trwania zajęć',
+        'add_activity_user_name' => $service->addActivityFriendlyNames['add_activity_user_name'],
+        'add_activity_user_email' => $service->addActivityFriendlyNames['add_activity_user_email'],
+        'add_activity_user_phone' => $service->addActivityFriendlyNames['add_activity_user_phone'],
+        'add_activity_name' => $service->addActivityFriendlyNames['add_activity_name'],
+        'add_activity_date' => $service->addActivityFriendlyNames['add_activity_date'],
+        'add_activity_time_start' => $service->addActivityFriendlyNames['add_activity_time_start'],
+        'add_activity_time_end' => $service->addActivityFriendlyNames['add_activity_time_end'],
     ];
 }
 
 add_action('manage_add_activity_posts_custom_column', 'fill_add_activity_columns', 10, 2);
 
 function fill_add_activity_columns($column, $postId) {
-    switch ($column) {
-        case 'add_activity_user_name':
-            echo get_post_meta($postId, 'add_activity_user_name', true);
-            break;
-        case 'add_activity_user_email':
-            echo get_post_meta($postId, 'add_activity_user_email', true);
-            break;
-        case 'add_activity_name':
-            echo get_post_meta($postId, 'add_activity_name', true);
-            break;
-        case 'add_activity_date':
-            echo get_post_meta($postId, 'add_activity_date', true);
-            break;
-        case 'add_activity_time':
-            echo get_post_meta($postId, 'add_activity_time', true);
-            break;
-        case 'add_activity_duration':
-            echo get_post_meta($postId, 'add_activity_duration', true);
-            break;
-    }
+    echo get_post_meta($postId, $column, true);
 }
 
 add_action('admin_init', 'setup_search_for_calendar_form_reservation');
@@ -130,7 +116,7 @@ function add_activity_search_override($search, $query) {
     if ($query->is_main_query() && ! empty($query->query['s'])) {
         $sql = "or exists (
             select * from {$wpdb->postmeta} where post_id={$wpdb->posts}.ID
-            and meta_key in ('add_activity_user_name', 'add_activity_user_email', 'add_activity_name')
+            and meta_key in ('add_activity_user_name', 'add_activity_user_email', 'add_activity_user_phone', 'add_activity_name')
             and meta_value like %s
         )";
         $like = '%' . $wpdb->esc_like($query->query['s']) . '%';

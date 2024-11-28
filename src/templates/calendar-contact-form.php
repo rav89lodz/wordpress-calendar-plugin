@@ -1,4 +1,12 @@
-<button type="button" id="calendarFormModalAddActivityButton" class="btn btn-primary" data-toggle="modal" data-target="#calendarFormModalAddActivity">Zgłoś zajęcia do kalendarza</button>
+<?php
+
+use CalendarPlugin\src\classes\services\LanguageService;
+
+$service = new LanguageService;
+
+?>
+
+<button type="button" id="calendarFormModalAddActivityButton" class="btn btn-primary" data-toggle="modal" data-target="#calendarFormModalAddActivity"><?= $service->modalFormFriendlyNames['add_activity_active_button'] ?></button>
 
 <div class="modal fade" id="calendarFormModalAddActivity" tabindex="-1" role="dialog" aria-labelledby="calendarFormModalAddActivityTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
@@ -6,7 +14,7 @@
             <div class="modal-header">
                 <div class="row w-100">
                     <div class="col-10">
-                        <h5 class="modal-title">Formularz zgłoszenia zajęć w kalendarzu</h5>
+                        <h5 class="modal-title"><?= $service->modalFormFriendlyNames['add_activity_title'] ?></h5>
                     </div>
                     <div class="col-2">
                         <div class="modal-plugin-close-button2">
@@ -22,50 +30,58 @@
                     <div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon77">Imię i nazwisko</span>
+                                <span class="input-group-text" id="basic-addon76"><?= $service->modalFormFriendlyNames['user_name_calendar_add_activity'] ?></span>
                             </div>
-                            <input type="text" class="form-control" name="user_name_calendar_add_activity" aria-describedby="basic-addon77">
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon78">Adres email</span>
-                            </div>
-                            <input type="text" class="form-control" name="user_email_calendar_add_activity" aria-describedby="basic-addon78">
+                            <input type="text" class="form-control" name="user_name_calendar_add_activity" aria-describedby="basic-addon76" required>
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon79">Proponowana data zajęć</span>
+                                <span class="input-group-text" id="basic-addon77"><?= $service->modalFormFriendlyNames['user_email_calendar_add_activity'] ?></span>
                             </div>
-                            <input type="text" class="form-control" name="date_calendar_add_activity" aria-describedby="basic-addon79">
-                            <small class="text-muted w-100">W przypadku zajęć cyklicznych należy podać dni tygodnia</small>
+                            <input type="email" class="form-control" name="user_email_calendar_add_activity" aria-describedby="basic-addon77" required>
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon80">Godzina rozpoczęcia</span>
+                                <span class="input-group-text" id="basic-addon78"><?= $service->modalFormFriendlyNames['user_phone_calendar_add_activity'] ?></span>
                             </div>
-                            <input type="text" class="form-control" name="time_calendar_add_activity" aria-describedby="basic-addon80">
+                            <input type="tel" class="form-control" name="user_phone_calendar_add_activity" aria-describedby="basic-addon78" required>
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon81">Czas trwania zajęć w minutach</span>
+                                <span class="input-group-text" id="basic-addon79"><?= $service->modalFormFriendlyNames['date_calendar_add_activity'] ?></span>
                             </div>
-                            <input type="number" class="form-control" name="duration_calendar_add_activity" aria-describedby="basic-addon81">
+                            <input type="text" class="form-control" name="date_calendar_add_activity" aria-describedby="basic-addon79" required>
+                            <small class="text-muted w-100"><?= $service->modalFormFriendlyNames['date_calendar_add_activity_text_muted'] ?></small>
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon82">Nazwa zajęć</span>
+                                <span class="input-group-text" id="basic-addon80"><?= $service->modalFormFriendlyNames['time_start_calendar_add_activity'] ?></span>
                             </div>
-                            <input type="text" class="form-control" name="name_calendar_add_activity" aria-describedby="basic-addon82">
+                            <input type="time" step="300" class="form-control" name="time_start_calendar_add_activity" aria-describedby="basic-addon80" required>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon81"><?= $service->modalFormFriendlyNames['time_end_calendar_add_activity'] ?></span>
+                            </div>
+                            <input type="time" step="300" class="form-control" name="time_end_calendar_add_activity" aria-describedby="basic-addon81" required>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon82"><?= $service->modalFormFriendlyNames['name_calendar_add_activity'] ?></span>
+                            </div>
+                            <input type="text" class="form-control" name="name_calendar_add_activity" aria-describedby="basic-addon82" required>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="close btn btn-secondary" data-dismiss="modal">Anuluj</button>
-                    <button type="button" id="submit_calendar_modal_form_add_activity" class="btn btn-success">Wyślij</button>
+                    <button type="button" class="close btn btn-secondary" data-dismiss="modal"><?= $service->modalFormFriendlyNames['cancel'] ?></button>
+                    <button type="button" id="submit_calendar_modal_form_add_activity" class="btn btn-success"><?= $service->modalFormFriendlyNames['send'] ?></button>
                 </div>
             </form>
         </div>

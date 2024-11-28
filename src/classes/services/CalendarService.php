@@ -12,6 +12,7 @@ class CalendarService
     private $datesOnThisWeek;
     private $service;
     private $shortCode;
+    private $langService;
 
     public function __construct($monthNumber = null, $startDate = null, $shortCode = null)
     {
@@ -19,6 +20,7 @@ class CalendarService
         $this->datesOnThisWeek = [];
         $this->showLeftArrows = $this->set_show_left_arrows($monthNumber, $startDate);
         $this->service = new ReservationService;
+        $this->langService = new LanguageService;
         $this->shortCode = $shortCode;
     }
 
@@ -61,7 +63,7 @@ class CalendarService
     }
 
     public function create_table_header() {
-        $days = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"];
+        $days = $this->langService->days;
         $currentDay = $this->calendar->get_cuttent_monday_date();
 
         echo '<th scope="col">';
@@ -139,7 +141,7 @@ class CalendarService
         for ($day = 1; $day <= 7; $day++) {
             if (!empty($groupedActivities[$currentTime][$day])) {
 
-                if(empty(get_calendar_plugin_options('calendar_plugin_fluent_calendar_grid'))) {
+                if($this->calendar->get_fluent_calendar_grid() === false) {
                     echo "<td>";
                 }
                 else {
@@ -149,7 +151,7 @@ class CalendarService
                 foreach ($groupedActivities[$currentTime][$day] as $activity) {
                     $this->get_row_with_activity($activity, $currentTime, $day);
                 }
-                if(empty(get_calendar_plugin_options('calendar_plugin_fluent_calendar_grid'))) {
+                if($this->calendar->get_fluent_calendar_grid() === false) {
                     echo "</td>";
                 }
                 else {
@@ -166,16 +168,71 @@ class CalendarService
     private function get_row_with_activity($activity, $currentTime, $day) {
         $id = $activity->get_hidden_id() . "_" . $currentTime . "_" . $day;
         $limit = $this->service->check_reservation_limit($activity->get_hidden_id(), $this->datesOnThisWeek[$day - 1]);
-        if($limit >= $activity->get_slot() || empty(get_calendar_plugin_options('calendar_plugin_make_rsv_by_calendar'))) {
-            echo "<div class='calendar-event cursor-default' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
+
+        $class = $this->set_fulent_background_class($activity->get_bg_color(), $activity->get_hidden_id(), $activity->get_duration());
+
+        if($limit >= $activity->get_slot() || $this->calendar->get_calendar_reservation() === false) {
+            echo "<div class='calendar-event cursor-default $class' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
         }
         else {
-            echo "<div class='calendar-event cursor-pointer' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
+            echo "<div class='calendar-event cursor-pointer $class' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
         }
-        echo "<span>" . htmlspecialchars($activity->get_duration()) . " min</span>";
+        
+        if($this->calendar->get_duration_on_grid() === true) {
+            echo "<span>" . htmlspecialchars($activity->get_duration()) . " min</span>";
+        }
         echo "<p class='text-wrap' style='font-weight: bold;'>" . htmlspecialchars($activity->get_name()) . "</p>";
-        echo "<p class='text-wrap'>" . htmlspecialchars($activity->get_type()) . "</p>";
+        if($this->calendar->get_place_activity_on_grid() === true) {
+            echo "<p class='text-wrap'>" . htmlspecialchars($activity->get_type()) . "</p>";
+        }
+        
+        if($this->calendar->get_end_time_on_grid() === true) {
+            echo "<p>" . $this->langService->calendarLabels['label_activity_end_at'] . htmlspecialchars($activity->get_end_at()) . "</p>";
+        }
         echo "</div>";
+    }
+
+    private function set_fulent_background_class($color, $classId, $height) {
+        if($this->calendar->get_fluent_calendar_grid() === false) {
+            return null;
+        }
+        $name = "$classId-" . $this->generate_random_string(12);
+
+        $base = 60; // Liczba 60 = 100%
+        $percentage = ($height / $base) * 100;
+
+        if($percentage < 100) {
+            $percentage = 0;
+        }
+        else {
+            $percentage = $percentage - 100; // 124 %
+        }
+
+        echo "<style>";
+        echo '.' . $name .'::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                height: ' . (140 * $percentage) / 100 . 'px;
+                background-color:' . $color . ';
+                z-index: -1;
+            }';
+        echo "</style>";
+        return $name;
+    }
+
+    private function generate_random_string($length) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+    
+        return $randomString;
     }
 
     private function print_header_row($dayName, $date, $id) {

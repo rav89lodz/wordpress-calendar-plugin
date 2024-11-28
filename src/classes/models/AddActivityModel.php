@@ -8,17 +8,19 @@ class AddActivityModel
 {
     private $activityUserName;
     private $activityUserEmail;
+    private $activityUserPhone;
     private $activityDate;
-    private $activityTime;
-    private $activityDuration;
+    private $activityTimeStart;
+    private $activityTimeEnd;
     private $activityName;
 
     public function __construct($data = null) {
         $this->activityUserName = null;
         $this->activityUserEmail = null;
+        $this->activityUserPhone = null;
         $this->activityDate = null;
-        $this->activityTime = null;
-        $this->activityDuration = null;
+        $this->activityTimeStart = null;
+        $this->activityTimeEnd = null;
         $this->activityName = null;
 
         if($data !== null && is_object($data)) {
@@ -34,16 +36,20 @@ class AddActivityModel
         return $this->activityUserEmail;
     }
 
+    public function get_activity_user_phone() {
+        return $this->activityUserPhone;
+    }
+
     public function get_activity_date() {
         return $this->activityDate;
     }
 
-    public function get_activity_time() {
-        return $this->activityTime;
+    public function get_activity_time_start() {
+        return $this->activityTimeStart;
     }
 
-    public function get_activity_duration() {
-        return $this->activityDuration;
+    public function get_activity_time_end() {
+        return $this->activityTimeEnd;
     }
 
     public function get_activity_name() {
@@ -51,14 +57,15 @@ class AddActivityModel
     }
 
     private function set_data($data) {
-        $data = $this->validate_model_data($data, ['user_name_calendar_add_activity', 'user_email_calendar_add_activity', 'date_calendar_add_activity',
-                                                    'time_calendar_add_activity', 'duration_calendar_add_activity', 'name_calendar_add_activity']);
+        $data = $this->validate_model_data($data, ['user_name_calendar_add_activity', 'user_email_calendar_add_activity', 'user_phone_calendar_add_activity', 'date_calendar_add_activity',
+                                                    'time_start_calendar_add_activity', 'time_end_calendar_add_activity', 'name_calendar_add_activity']);
         
         $this->activityUserName = $data->user_name_calendar_add_activity;
         $this->activityUserEmail = $data->user_email_calendar_add_activity;
+        $this->activityUserPhone = $data->user_phone_calendar_add_activity;
         $this->activityDate = $data->date_calendar_add_activity;
-        $this->activityTime = $data->time_calendar_add_activity;
-        $this->activityDuration = $data->duration_calendar_add_activity;
+        $this->activityTimeStart = $data->time_start_calendar_add_activity;
+        $this->activityTimeEnd = $data->time_end_calendar_add_activity;
         $this->activityName = $data->name_calendar_add_activity;
     }
 

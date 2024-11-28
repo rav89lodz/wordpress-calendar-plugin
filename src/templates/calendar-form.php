@@ -1,6 +1,7 @@
 <?php
 
 use CalendarPlugin\src\classes\services\CalendarService;
+use CalendarPlugin\src\classes\services\LanguageService;
 
 $initMonth = null;
 $initDate = null;
@@ -23,6 +24,8 @@ if(isset($_POST['calendar_grid_short_code'])) {
 
 $insertShort = implode('|*|', $shortCode);
 $calendarService = new CalendarService($initMonth, $initDate, $shortCode);
+
+$service = new LanguageService;
 
 ?>
 
@@ -94,7 +97,7 @@ $calendarService = new CalendarService($initMonth, $initDate, $shortCode);
                 </div>
             </div>
             <div>
-                <table class="table table-striped table-bordered text-center" id="calendar_form_table">
+                <table class="table table-striped table-bordered text-center calendar-table" id="calendar_form_table">
                     <?php
                         echo '<thead class="calendar-table-header">';
                             $calendarService->create_table_header();
@@ -113,7 +116,7 @@ $calendarService = new CalendarService($initMonth, $initDate, $shortCode);
     </div>
 </div>
 
-<?php if (get_calendar_plugin_options('calendar_plugin_make_rsv_by_calendar')): ?>
+<?php if ($calendarService->calendar->get_calendar_reservation() === true): ?>
 
 <div class="modal fade" id="calendarFormModalCenter" tabindex="-1" role="dialog" aria-labelledby="calendarFormModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -121,7 +124,7 @@ $calendarService = new CalendarService($initMonth, $initDate, $shortCode);
             <div class="modal-header">
                 <div class="row w-100">
                     <div class="col-10">
-                        <h5 class="modal-title">Zapis na zajęcia</h5>
+                        <h5 class="modal-title"><?= $service->modalFormFriendlyNames['reservation_title']?></h5>
                     </div>
                     <div class="col-2">
                         <div class="modal-plugin-close-button">
@@ -135,20 +138,20 @@ $calendarService = new CalendarService($initMonth, $initDate, $shortCode);
             <form id="calendar_modal_form">
                 <div class="modal-body">
                     <div>
-                        <p>Zapis na zajęcia w dniu <strong id="calendar_modal_day_name"></strong> o godzinie <strong id="calendar_modal_hour"></strong></p>
+                        <p><?= $service->modalFormFriendlyNames['reservation_day']?> <strong id="calendar_modal_day_name"></strong> <?= $service->modalFormFriendlyNames['reservation_hour']?> <strong id="calendar_modal_hour"></strong></p>
                     </div>
                     <div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">Imię i nazwisko</span>
+                                <span class="input-group-text" id="basic-addon1"><?= $service->modalFormFriendlyNames['user_name_calendar_add_activity']?></span>
                             </div>
-                            <input type="text" class="form-control" name="user_name_calendar_modal" id="user_name_calendar_modal" aria-describedby="basic-addon1">
+                            <input type="text" class="form-control" name="user_name_calendar_modal" id="user_name_calendar_modal" aria-describedby="basic-addon1" required>
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon2">Adres email</span>
+                                <span class="input-group-text" id="basic-addon2"><?= $service->modalFormFriendlyNames['user_email_calendar_add_activity']?></span>
                             </div>
-                            <input type="text" class="form-control" name="user_email_calendar_modal" id="user_email_calendar_modal" aria-describedby="basic-addon2">
+                            <input type="email" class="form-control" name="user_email_calendar_modal" id="user_email_calendar_modal" aria-describedby="basic-addon2" required>
                         </div>
                         <input type="hidden" name="calendar_modal_hidden_id" id="calendar_modal_hidden_id">
                         <input type="hidden" name="calendar_modal_day_name" id="calendar_modal_day_name_input">
@@ -156,8 +159,8 @@ $calendarService = new CalendarService($initMonth, $initDate, $shortCode);
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="close btn btn-secondary" data-dismiss="modal">Anuluj</button>
-                    <button type="button" id="submit_calendar_modal_form" class="btn btn-success">Wyślij</button>
+                    <button type="button" class="close btn btn-secondary" data-dismiss="modal"><?= $service->modalFormFriendlyNames['cancel']?></button>
+                    <button type="button" id="submit_calendar_modal_form" class="btn btn-success"><?= $service->modalFormFriendlyNames['send']?></button>
                 </div>
             </form>
         </div>
@@ -170,7 +173,7 @@ $calendarService = new CalendarService($initMonth, $initDate, $shortCode);
             <div class="modal-header">
                 <div class="row w-100">
                     <div class="col-10">
-                        <h5 class="modal-title">Zapis na zajęcia - limit wyczerpany</h5>
+                        <h5 class="modal-title"><?= $service->modalFormFriendlyNames['reservation_limit_over_title']?></h5>
                     </div>
                     <div class="col-2">
                         <div class="modal-plugin-close-button">
@@ -184,11 +187,11 @@ $calendarService = new CalendarService($initMonth, $initDate, $shortCode);
             <form id="calendar_modal_form">
                 <div class="modal-body">
                     <div>
-                        <h5>Zapis na zajęcia jest niemożliwy. Limit miejsc został wyczerpany</h5>
+                        <h5><?= $service->modalFormFriendlyNames['reservation_limit_over_message']?></h5>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="close btn btn-secondary" data-dismiss="modal">Ok</button>
+                    <button type="button" class="close btn btn-secondary" data-dismiss="modal"><?= $service->modalFormFriendlyNames['reservation_limit_over_confirm']?></button>
                 </div>
             </form>
         </div>

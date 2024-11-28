@@ -2,6 +2,8 @@
 
 namespace CalendarPlugin\src\classes\models;
 
+use CalendarPlugin\src\classes\services\LanguageService;
+
 class CalendarModel
 {
     private $currentDate;
@@ -10,6 +12,12 @@ class CalendarModel
     private $firstHourOnCalendar;
     private $lastHourOnCalendar;
     private $currentMonthName;
+    private $calendarInterval;
+    private $calendarReservation;
+    private $durationOnGrid;
+    private $placeActivityOnGrid;
+    private $endTimeOnGrid;
+    private $fulentCalendarGrid;
 
     public function __construct($monthNumber = null, $startDate = null) {
         if($monthNumber !== null && $startDate === null) {
@@ -29,6 +37,12 @@ class CalendarModel
         $this->currentTime = $this->set_current_time();
         $this->firstHourOnCalendar = $this->set_first_hour_on_calendar();
         $this->lastHourOnCalendar = $this->set_last_hour_on_calendar();
+        $this->calendarInterval = $this->set_calendar_interval_option();
+        $this->calendarReservation = $this->set_calendar_option('calendar_plugin_make_rsv_by_calendar');
+        $this->durationOnGrid = $this->set_calendar_option('calendar_plugin_duration_time_on_grid');
+        $this->placeActivityOnGrid = $this->set_calendar_option('calendar_plugin_activity_place_on_grid');
+        $this->endTimeOnGrid = $this->set_calendar_option('calendar_plugin_end_time_on_grid');
+        $this->fulentCalendarGrid = $this->set_calendar_option('calendar_plugin_fluent_calendar_grid');
     }
 
     public function get_cuttent_date() {
@@ -59,6 +73,30 @@ class CalendarModel
         return $this->currentMonthName;
     }
 
+    public function get_calendar_interval() {
+        return $this->calendarInterval;
+    }
+
+    public function get_calendar_reservation() {
+        return $this->calendarReservation;
+    }
+
+    public function get_duration_on_grid() {
+        return $this->durationOnGrid;
+    }
+
+    public function get_place_activity_on_grid() {
+        return $this->placeActivityOnGrid;
+    }
+
+    public function get_end_time_on_grid() {
+        return $this->endTimeOnGrid;
+    }
+
+    public function get_fluent_calendar_grid() {
+        return $this->fulentCalendarGrid;
+    }
+
     private function set_current_monday_date_form_param($startDate = null) {
         if($startDate == null) {
             return $this->set_current_monday_date();
@@ -80,6 +118,19 @@ class CalendarModel
         return date('Y-m-d', $firstMonday);
     }
     
+    private function set_calendar_option($option) {
+        if(empty(get_calendar_plugin_options($option))) {
+            return false;
+        }
+        return true;
+    }
+
+    private function set_calendar_interval_option() {
+        if(empty(get_calendar_plugin_options('calendar_plugin_interval'))) {
+            return 60;
+        }
+        return get_calendar_plugin_options('calendar_plugin_interval');
+    }
 
     private function set_current_date() {
         return date('Y-m-d');
@@ -107,7 +158,8 @@ class CalendarModel
     }
 
     private function set_current_month_name($month = null) {
-        $months = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"];
+        $service = new LanguageService;
+        $months = $service->months;
         if($month !== null) {
             $monthNumber = date('m', strtotime($month));
             if($monthNumber > 0 && $monthNumber < 13) {
