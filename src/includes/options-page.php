@@ -144,9 +144,11 @@ function create_options_page_for_calendar_plugin() {
                         ->set_required( true ),
                     Field::make( 'time', 'activity_start_at', $langService->optionPage['calendar_grid_data_field2_name'] )
                         ->set_storage_format('H:i')
+                        ->set_required( true )
                         ->set_picker_options(['time_24hr' => true, 'altFormat' => 'H:i', 'enableSeconds' => false]),
                     Field::make( 'time', 'activity_end_at', $langService->optionPage['calendar_grid_data_field3_name'] )
                         ->set_storage_format('H:i')
+                        ->set_required( true )
                         ->set_picker_options(['time_24hr' => true, 'altFormat' => 'H:i', 'enableSeconds' => false]),
                     Field::make( 'checkbox', 'activity_cyclic', $langService->optionPage['calendar_grid_data_field4_name'] )
                         ->set_option_value( '1' ),
