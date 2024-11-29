@@ -74,19 +74,19 @@ class ReservationService
         $limit = $this->check_reservation_limit($activity->get_hidden_id(), $model->get_reservation_date());
         if($limit >= $activity->get_slot()) {
             $message .= "<div><strong style='color:red'>" . $this->service->reservationMessage['message_beginning_failure'] .
-                        "</strong></div><div><strong>" . $this->service->reservationFriendlyNames['user_email'] . "</strong>: " . $model->get_user_email() .
-                        "</div><div><strong>" . $this->service->reservationFriendlyNames['reservation_date'] . "</strong>: " . $model->get_reservation_date() .
-                        "</div><div><strong>" . $this->service->reservationFriendlyNames['reservation_time'] . "</strong>: " . $model->get_reservation_time() .
-                        "</div><div><strong>" . $this->service->reservationFriendlyNames['activity_name'] . "</strong>: " . $activity->get_name();
+                        "</strong></div><br><div><strong>" . $this->service->reservationFriendlyNames['user_email'] . "</strong>: " . $model->get_user_email() .
+                        "</div><br><div><strong>" . $this->service->reservationFriendlyNames['reservation_date'] . "</strong>: " . $model->get_reservation_date() .
+                        "</div><br><div><strong>" . $this->service->reservationFriendlyNames['reservation_time'] . "</strong>: " . $model->get_reservation_time() .
+                        "</div><br><div><strong>" . $this->service->reservationFriendlyNames['activity_name'] . "</strong>: " . $activity->get_name() . "</div>";
             return [$message, false];
         }
         $this->insert_data($model, $activity);
 
         $message .= "<div><strong style='color:green'>" . $this->service->reservationMessage['message_beginning_success'] .
-                    "</strong></div><div><strong>" . $this->service->reservationFriendlyNames['user_email'] . "</strong>: " . $model->get_user_email() .
-                    "</div><div><strong>" . $this->service->reservationFriendlyNames['reservation_date'] . "</strong>: " . $model->get_reservation_date() .
-                    "</div><div><strong>" . $this->service->reservationFriendlyNames['reservation_time'] . "</strong>: " . $model->get_reservation_time() .
-                    "</div><div><strong>" . $this->service->reservationFriendlyNames['activity_name'] . "</strong>: " . $activity->get_name();
+                    "</strong></div><br><div><strong>" . $this->service->reservationFriendlyNames['user_email'] . "</strong>: " . $model->get_user_email() .
+                    "</div><br><div><strong>" . $this->service->reservationFriendlyNames['reservation_date'] . "</strong>: " . $model->get_reservation_date() .
+                    "</div><br><div><strong>" . $this->service->reservationFriendlyNames['reservation_time'] . "</strong>: " . $model->get_reservation_time() .
+                    "</div><br><div><strong>" . $this->service->reservationFriendlyNames['activity_name'] . "</strong>: " . $activity->get_name() . "</div>";
 
         return [$message, true];
     }

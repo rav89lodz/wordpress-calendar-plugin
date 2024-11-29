@@ -54,11 +54,11 @@ class AddActivityService
         $this->insert_data($model);
 
         $message .= "<div><strong>" . $this->service->addActivityMessage['message_beginning'] . $model->get_activity_name() .
-                    "</strong></div><div><strong>" . $this->service->addActivityFriendlyNames['add_activity_user_email'] . "</strong>: " . $model->get_activity_user_email() .
-                    "</div><div><strong>" . $this->service->addActivityFriendlyNames['add_activity_user_phone'] . "</strong>: " . $model->get_activity_user_phone() .
-                    "</div><div><strong>" . $this->service->addActivityFriendlyNames['add_activity_date'] . "</strong>: " . $model->get_activity_date() .
-                    "</div><div><strong>" . $this->service->addActivityFriendlyNames['add_activity_time_start'] . "</strong>: " . $model->get_activity_time_start() .
-                    "</div><div><strong>" . $this->service->addActivityFriendlyNames['add_activity_time_end'] . "</strong>: " . $model->get_activity_time_end();
+                    "</strong></div><br><div><strong>" . $this->service->addActivityFriendlyNames['add_activity_user_email'] . "</strong>: " . $model->get_activity_user_email() .
+                    "</div><br><div><strong>" . $this->service->addActivityFriendlyNames['add_activity_user_phone'] . "</strong>: " . $model->get_activity_user_phone() .
+                    "</div><br><div><strong>" . $this->service->addActivityFriendlyNames['add_activity_date'] . "</strong>: " . $model->get_activity_date() .
+                    "</div><br><div><strong>" . $this->service->addActivityFriendlyNames['add_activity_time_start'] . "</strong>: " . $model->get_activity_time_start() .
+                    "</div><br><div><strong>" . $this->service->addActivityFriendlyNames['add_activity_time_end'] . "</strong>: " . $model->get_activity_time_end() . "</div>";
 
         return $message;
     }
