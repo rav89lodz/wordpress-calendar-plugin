@@ -58,7 +58,7 @@ function change_grid_content(xmlhttp) {
         }
     }
     catch(error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -83,17 +83,22 @@ function calendar_form_submit(url, object_name) {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.onload = function() {
         if (xmlhttp.readyState === 4) {
-            let jsonResponse = JSON.parse(xmlhttp.responseText);
-            let parser = new DOMParser();
-            let response = parser.parseFromString(jsonResponse, "text/html");
-
-            if (xmlhttp.status === 200) {
-                document.querySelector('.my-alert-success').style.display = "block";
-                document.querySelector("#form_success").innerText = response.firstChild.innerText;
+            try {
+                let jsonResponse = JSON.parse(xmlhttp.responseText);
+                let parser = new DOMParser();
+                let response = parser.parseFromString(jsonResponse, "text/html");
+    
+                if (xmlhttp.status === 200) {
+                    document.querySelector('.my-alert-success').style.display = "block";
+                    document.querySelector("#form_success").innerText = response.firstChild.innerText;
+                }
+                else {
+                    document.querySelector('.my-alert-error').style.display = "block";
+                    document.querySelector("#form_error").innerText = response.firstChild.innerText;
+                }
             }
-            else {
-                document.querySelector('.my-alert-error').style.display = "block";
-                document.querySelector("#form_error").innerText = response.firstChild.innerText;
+            catch(error) {
+                console.error(error);
             }
         }
     }

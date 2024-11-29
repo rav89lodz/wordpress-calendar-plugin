@@ -72,7 +72,7 @@ class ReservationService
         $activity = $model->get_activity();
 
         $limit = $this->check_reservation_limit($activity->get_hidden_id(), $model->get_reservation_date());
-        if($limit >= $activity->get_slot()) {
+        if($limit >= $activity->get_slot() || $model->get_user_name() === null || $model->get_user_email() === null) {
             $message .= "<div><strong style='color:red'>" . $this->service->reservationMessage['message_beginning_failure'] .
                         "</strong></div><br><div><strong>" . $this->service->reservationFriendlyNames['user_email'] . "</strong>: " . $model->get_user_email() .
                         "</div><br><div><strong>" . $this->service->reservationFriendlyNames['reservation_date'] . "</strong>: " . $model->get_reservation_date() .
@@ -80,6 +80,7 @@ class ReservationService
                         "</div><br><div><strong>" . $this->service->reservationFriendlyNames['activity_name'] . "</strong>: " . $activity->get_name() . "</div>";
             return [$message, false];
         }
+
         $this->insert_data($model, $activity);
 
         $message .= "<div><strong style='color:green'>" . $this->service->reservationMessage['message_beginning_success'] .

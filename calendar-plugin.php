@@ -41,6 +41,10 @@ if (! class_exists('CalendarPlugin')) {
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/services/OptionsPageService.php');
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/services/ReservationService.php');
 
+            require_once(CALENDAR_PLUGIN_PATH . '/src/classes/forms/CalendarForm.php');
+            require_once(CALENDAR_PLUGIN_PATH . '/src/classes/forms/CalendarHorizontalForm.php');
+            require_once(CALENDAR_PLUGIN_PATH . '/src/classes/forms/CalendarVerticalForm.php');
+
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/FormValidator.php');
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/Utils.php');
 

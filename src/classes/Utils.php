@@ -46,7 +46,8 @@ class Utils
         }
         
         $message = $this->set_up_polish_characters($message);
-        return ["message" => str_replace('{name}', $name, $message), "code" => $code];
+        $message = $name === null ? str_replace('{name}', "", $message) : str_replace('{name}', $name, $message);
+        return ["message" => $message, "code" => $code];
     }
 
     /**

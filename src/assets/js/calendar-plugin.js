@@ -155,7 +155,7 @@ function set_fluent_backgroung(tbody) {
 
     data_elements.forEach((e) => {
         let dates = e.getAttribute('data-info').split('|');
-        console.log(e.classList[2]);
+
         if(dates[2] > 60) {
             let sum = -280;
             for (let k in data_hours) {

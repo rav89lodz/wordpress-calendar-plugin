@@ -160,7 +160,7 @@ $service = new LanguageService;
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="close btn btn-secondary" data-dismiss="modal"><?= $service->modalFormFriendlyNames['cancel']?></button>
-                    <button type="button" id="submit_calendar_modal_form" class="btn btn-success"><?= $service->modalFormFriendlyNames['send']?></button>
+                    <button type="submit" id="submit_calendar_modal_form" class="btn btn-success"><?= $service->modalFormFriendlyNames['send']?></button>
                 </div>
             </form>
         </div>
