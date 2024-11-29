@@ -6,12 +6,28 @@ use CalendarPlugin\src\classes\Utils;
 
 class OptionsPageService
 {
+    /**
+     * Constructor
+     */
+    public function __construct() {
+    }
+
+    /**
+     * Update data after settings page is saved
+     * 
+     * @return void
+     */
     public function update_data_after_save() {
         $this->set_hidden_ids();
         $this->remove_incorrect_data();
         $this->set_type_keys();
     }
 
+    /**
+     * Get activity types from DB
+     * 
+     * @return array
+     */
     public function get_activity_types() {
         global $wpdb;
     
@@ -25,19 +41,12 @@ class OptionsPageService
         return [];
     }
 
-    public function catch_sended_data_from_plugin_settings() {
-        if(array_key_exists('carbon_fields_compact_input', $_POST) && array_key_exists('_calendar_plugin_data', $_POST['carbon_fields_compact_input'])) {
-            foreach($_POST['carbon_fields_compact_input']['_calendar_plugin_data'] as $element) {
-                if(array_key_exists('_activity_hidden_id', $element) && empty($element['_activity_hidden_id'])) {
-                    $element['_activity_hidden_id'] = $this->get_uuid_for_calendar_object();
-                }
-                var_dump($element);
-                echo "<br><br>";
-            }
-            die("done");
-        }
-    }
-
+    /**
+     * Create short code
+     * 
+     * @param string code
+     * @return string
+     */
     public function create_short_code($code) {
         $utils = new Utils;
         $short = $utils->remove_polish_letters($code);
@@ -45,6 +54,11 @@ class OptionsPageService
         return $short;
     }
 
+    /**
+     * Set type keys if incorrect value after settings page is saved
+     * 
+     * @return void
+     */
     private function set_type_keys() {
         global $wpdb;
         $rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->options WHERE option_name LIKE %s", '_calendar_plugin_types|type_name%' ), ARRAY_A );
@@ -55,6 +69,11 @@ class OptionsPageService
         }
     }
 
+    /**
+     * Remove incorrect data after settings page is saved
+     * 
+     * @return void
+     */
     private function remove_incorrect_data() {
         global $wpdb;
                                 // SELECT * FROM `wp_options` WHERE `option_name` IN (SELECT CONCAT("_calendar_plugin_data|activity_date|", SUBSTRING_INDEX(`option_name`, '|', -3)) as "id" FROM `wp_options` WHERE `option_name` like '_calendar_plugin_data|activity_cyclic%' AND `option_value` = 1) AND `option_value` LIKE '%-%-%';
@@ -66,6 +85,11 @@ class OptionsPageService
         }
     }
 
+    /**
+     * Set Id for calendar object after settings page is saved
+     * 
+     * @return void
+     */
     private function set_hidden_ids() {
         global $wpdb;
 
@@ -76,6 +100,11 @@ class OptionsPageService
         }
     }
 
+    /**
+     * Create UUID
+     * 
+     * @return string
+     */
     private function get_uuid_for_calendar_object() {
         $data = random_bytes(16);
 

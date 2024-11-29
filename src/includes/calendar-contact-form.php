@@ -9,6 +9,11 @@ if (! defined('ABSPATH')) {
 
 add_shortcode('contact-form-calendar1', 'show_calendar_contact_form');
 
+/**
+ * Show calendar contact form
+ * 
+ * @return string|false
+ */
 function show_calendar_contact_form() {
     ob_start();
         include( CALENDAR_PLUGIN_PATH . '/src/templates/calendar-contact-form.php' );
@@ -23,6 +28,12 @@ add_action('rest_api_init', function(){
     ]);
 });
 
+/**
+ * Handle rest API endpoint
+ * 
+ * @param mixed data
+ * @return object|null
+ */
 function handle_calendar_form_add_activity($data) {
     $service = new AddActivityService(json_decode($data->get_body()));
     $response = $service->get_response_after_add_activity();
@@ -32,6 +43,11 @@ function handle_calendar_form_add_activity($data) {
 
 add_action('init', 'create_add_activity_page');
 
+/**
+ * Create option on WP menu
+ * 
+ * @return void
+ */
 function create_add_activity_page() {
     $service = new LanguageService;
     $args = [
@@ -57,11 +73,21 @@ function create_add_activity_page() {
 
 add_action('add_meta_boxes', 'create_meta_box_for_add_activity');
 
+/**
+ * Crete meta box
+ * 
+ * @return void
+ */
 function create_meta_box_for_add_activity() {
     $service = new LanguageService;
     add_meta_box('custom_calendar_form', $service->addActivityMenu['meta_box_title'], 'display_add_activity', 'add_activity');
 }
 
+/**
+ * Display data in meta box
+ * 
+ * @return void
+ */
 function display_add_activity() {
     $data = get_post_meta(get_the_ID());
     $service = new LanguageService;
@@ -80,6 +106,12 @@ function display_add_activity() {
 
 add_filter('manage_add_activity_posts_columns', 'custom_add_activity_columns');
 
+/**
+ * Create activity columns view
+ * 
+ * @param array columns
+ * @return array
+ */
 function custom_add_activity_columns($columns) {
     $service = new LanguageService;
     return [
@@ -96,13 +128,25 @@ function custom_add_activity_columns($columns) {
 
 add_action('manage_add_activity_posts_custom_column', 'fill_add_activity_columns', 10, 2);
 
+/**
+ * Fill activity columns view
+ * 
+ * @param string column
+ * @param string|int postId
+ * @return void
+ */
 function fill_add_activity_columns($column, $postId) {
     echo get_post_meta($postId, $column, true);
 }
 
-add_action('admin_init', 'setup_search_for_calendar_form_reservation');
+add_action('admin_init', 'setup_search_for_calendar_form_add_activity');
 
-function setup_search_for_calendar_form_reservation() {
+/**
+ * Setup search for add_activity post type
+ * 
+ * @return void
+ */
+function setup_search_for_calendar_form_add_activity() {
     global $typenow;
 
     if ($typenow == 'add_activity') {
@@ -110,6 +154,13 @@ function setup_search_for_calendar_form_reservation() {
     }
 }
 
+/**
+ * Search data
+ * 
+ * @param mixed search
+ * @param mixed query
+ * @return mixed
+ */
 function add_activity_search_override($search, $query) {
     global $wpdb;
 

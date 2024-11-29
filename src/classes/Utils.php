@@ -12,6 +12,11 @@ class Utils
     private $model;
     private $service;
 
+    /**
+     * Constructor
+     *
+     * @return void
+     */
     public function __construct() {
         $this->adminEmail = strtolower(trim(get_calendar_plugin_options('calendar_plugin_recipients') ?? get_bloginfo('admin_email')));
         $this->adminName = get_bloginfo('name');
@@ -19,18 +24,37 @@ class Utils
         $this->service = new LanguageService;
     }
 
-    public function set_success_error_message_with_code($name, $code, $messageSuccess) {
-        if($messageSuccess === false) {
-            $message = $this->model->get_message_error() ??  $this->service->calendarLabels['default_error_message'];
+    /**
+     * Set success or error message with response code
+     * 
+     * @param string name
+     * @param int code
+     * @param int message option
+     * @return array
+     */
+    public function set_success_error_message_with_code($name, $code, $messageOption = 99) {
+        switch($messageOption) {
+            case 1:
+                $message = $this->model->get_message_success() ?? $this->service->calendarLabels['default_success_message'];
+                break;
+            case 2:
+                $message = $this->model->get_message_form_sended() ??  $this->service->calendarLabels['default_success_message'];
+                break;
+            default:
+                $message = $this->model->get_message_error() ??  $this->service->calendarLabels['default_error_message'];
+                break;
         }
-        else {
-            $message = $this->model->get_message_success() ?? $this->service->calendarLabels['default_success_message'];
-        }
+        
         $message = $this->set_up_polish_characters($message);
         return ["message" => str_replace('{name}', $name, $message), "code" => $code];
     }
 
-    
+    /**
+     * Make array of objects to flat array
+     * 
+     * @param array array
+     * @return array
+     */
     public function array_of_object_to_flat_array($array) {
         $toReturn = [];
 
@@ -46,9 +70,17 @@ class Utils
         return $toReturn;
     }
 
-    public function send_email_with_store_data($message, $subject, $replayTo) {
+    /**
+     * Send email with data
+     * 
+     * @param string message
+     * @param string subject
+     * @param string replayTo
+     * @return bool
+     */
+    public function send_email_with_data($message, $subject, $replayTo) {
         $headers = $this->set_custom_headers($replayTo);
-        wp_mail(
+        return wp_mail(
             $this->adminEmail,
             $subject,
             $message,
@@ -56,6 +88,12 @@ class Utils
         );
     }
 
+    /**
+     * Set up polish html characters
+     * 
+     * @param string string
+     * @return string
+     */
     public function set_up_polish_characters($string) {
         $specialChars = [
             '\u0105', # ą
@@ -103,6 +141,12 @@ class Utils
         return json_decode($result);
     }
     
+    /**
+     * Replace polish letters to conventional letters
+     * 
+     * @param string string
+     * @return string
+     */
     public function remove_polish_letters($string) {
         $polishLetters = [
             'ą',
@@ -149,7 +193,12 @@ class Utils
         return str_replace($polishLetters, $toReplace, $string);
     }
 
-
+    /**
+     * Prepare shot code for current page
+     * 
+     * @param mixed shortCodes
+     * @return array|null
+     */
     public function prepare_current_short_codes($shortCodes) {
         $preDefinedToSkip = ['[calendar-grid1]', '[contact-form-calendar1]'];
         $toSet = null;
@@ -170,6 +219,12 @@ class Utils
         return $toSet;
     }
 
+    /**
+     * Set custom headers for email
+     * 
+     * @param string replayTo
+     * @return array
+     */
     private function set_custom_headers($replayTo) {
         return [
             "From: {$this->adminName} <{$this->adminEmail}>",

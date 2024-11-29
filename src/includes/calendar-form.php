@@ -10,6 +10,12 @@ if (! defined('ABSPATH')) {
 
 add_shortcode('calendar-grid1', 'show_calendar_grid');
 
+/**
+ * Show calendar grid
+ * 
+ * @param mixed post_id
+ * @return string|false
+ */
 function show_calendar_grid($post_id = null) {
     $post_content = get_post_field('post_content', $post_id);
 
@@ -39,6 +45,12 @@ add_action('rest_api_init', function() {
     ]);
 });
 
+/**
+ * Handle rest API endpoint
+ * 
+ * @param mixed data
+ * @return string|false
+ */
 function handle_calendar_grid_change_month($data) {
     $data = json_decode($data->get_body());
     $_POST['calendar_grid_change_month'] = $data->data;
@@ -50,6 +62,12 @@ function handle_calendar_grid_change_month($data) {
     return ob_get_clean();
 }
 
+/**
+ * Handle rest API endpoint
+ * 
+ * @param mixed data
+ * @return string|false
+ */
 function handle_calendar_grid_change_week($data) {
     $data = json_decode($data->get_body());
     $_POST['calendar_grid_change_week'] = $data->data;
@@ -61,6 +79,12 @@ function handle_calendar_grid_change_week($data) {
     return ob_get_clean();
 }
 
+/**
+ * Handle rest API endpoint
+ * 
+ * @param mixed data
+ * @return object|null
+ */
 function handle_calendar_grid_form_registration_for_activity($data) {
     $service = new ReservationService(json_decode($data->get_body()));
     $response = $service->get_response_after_reservation();
@@ -71,6 +95,11 @@ function handle_calendar_grid_form_registration_for_activity($data) {
 
 add_action('init', 'create_reservation_page');
 
+/**
+ * Create option on WP menu
+ * 
+ * @return void
+ */
 function create_reservation_page() {
     $service = new LanguageService;
     $args = [
@@ -96,11 +125,21 @@ function create_reservation_page() {
 
 add_action('add_meta_boxes', 'create_meta_box_for_calendar_plugin');
 
+/**
+ * Crete meta box
+ * 
+ * @return void
+ */
 function create_meta_box_for_calendar_plugin() {
     $service = new LanguageService;
     add_meta_box('custom_calendar_form', $service->reservationMenu['meta_box_title'], 'display_reservation', 'reservation');
 }
 
+/**
+ * Display data in meta box
+ * 
+ * @return void
+ */
 function display_reservation() {
     $data = get_post_meta(get_the_ID());
     $service = new LanguageService;
@@ -120,6 +159,12 @@ function display_reservation() {
 
 add_filter('manage_reservation_posts_columns', 'custom_reservation_columns');
 
+/**
+ * Create reservation columns view
+ * 
+ * @param array columns
+ * @return array
+ */
 function custom_reservation_columns($columns) {
     $service = new LanguageService;
     return [
@@ -134,12 +179,24 @@ function custom_reservation_columns($columns) {
 
 add_action('manage_reservation_posts_custom_column', 'fill_reservation_columns', 10, 2);
 
+/**
+ * Fill reservation columns view
+ * 
+ * @param string column
+ * @param string|int postId
+ * @return void
+ */
 function fill_reservation_columns($column, $postId) {
     echo get_post_meta($postId, $column, true);
 }
 
 add_action('admin_init', 'setup_search_for_calendar_grid_plugin');
 
+/**
+ * Setup search for reservation post type
+ * 
+ * @return void
+ */
 function setup_search_for_calendar_grid_plugin() {
     global $typenow;
 
@@ -148,6 +205,13 @@ function setup_search_for_calendar_grid_plugin() {
     }
 }
 
+/**
+ * Search data
+ * 
+ * @param mixed search
+ * @param mixed query
+ * @return mixed
+ */
 function reservation_search_override($search, $query) {
     global $wpdb;
 

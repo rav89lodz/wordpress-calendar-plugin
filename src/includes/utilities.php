@@ -6,19 +6,21 @@ if (! defined('ABSPATH')) {
 
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts_for_calendar_plugin');
 
-// add_action( 'admin_head', 'calendar_plugin_css_admin' );
-
-// function calendar_plugin_css_admin() {
-//     $cssPath = CALENDAR_PLUGIN_URL . 'src/assets/css/calendar-plugin-admin.css';
-//     $jsPath = CALENDAR_PLUGIN_URL . 'src/assets/js/calendar-plugin-admin.js';
-//     echo '<link rel="stylesheet" href="' . $cssPath . '" media="all">';
-//     echo '<script src="' . $jsPath . '"></script>';
-// }
-
+/**
+ * Get calendar plugin options
+ * 
+ * @param string param
+ * @return mixed
+ */
 function get_calendar_plugin_options($name) {
     return carbon_get_theme_option($name);
 }
 
+/**
+ * Enqueue custom scripts
+ * 
+ * @return void
+ */
 function enqueue_custom_scripts_for_calendar_plugin() {
     wp_enqueue_style('calendar-form-style', CALENDAR_PLUGIN_URL . 'src/assets/css/bootstrap.min.css');
     wp_enqueue_style('calendar-form-style-map', CALENDAR_PLUGIN_URL . 'src/assets/css/bootstrap.min.css.map');

@@ -17,62 +17,139 @@ class ActivityModel
     private $rawType;
     private $slot;
 
+    /**
+     * Constructor
+     * 
+     * @param string id
+     * @return void
+     */
     public function __construct($id) {
         $this->set_activity_model_data_by_id($id);
     }
 
+    /**
+     * Get hiddenID
+     * 
+     * @return string|null
+     */
     public function get_hidden_id() {
         return $this->hiddenID;
     }
 
+    /**
+     * Get name
+     * 
+     * @return string|null
+     */
     public function get_name() {
         return $this->name;
     }
 
+    /**
+     * Get startAt
+     * 
+     * @return string|null
+     */
     public function get_start_at() {
         return $this->startAt;
     }
 
+    /**
+     * Get endAt
+     * 
+     * @return string|null
+     */
     public function get_end_at() {
         return $this->endAt;
     }
 
+    /**
+     * Get duration
+     * 
+     * @return string|null
+     */
     public function get_duration() {
         return $this->duration;
     }
 
+    /**
+     * Get isCyclic
+     * 
+     * @return string|null
+     */
     public function get_is_cyclic() {
         return $this->isCyclic;
     }
 
+    /**
+     * Get date
+     * 
+     * @return string|null
+     */
     public function get_date() {
         return $this->date;
     }
 
+    /**
+     * Get day
+     * 
+     * @return string|null
+     */
     public function get_day() {
         return $this->day;
     }
 
+    /**
+     * Get bgColor
+     * 
+     * @return string|null
+     */
     public function get_bg_color() {
         return $this->bgColor;
     }
 
+    /**
+     * Get rawType
+     * 
+     * @return string|null
+     */
     public function get_raw_type() {
         return $this->rawType;
     }
 
+    /**
+     * Get type
+     * 
+     * @return string|null
+     */
     public function get_type() {
         return $this->type;
     }
 
+    /**
+     * Get slot
+     * 
+     * @return string|null
+     */
     public function get_slot() {
         return $this->slot;
     }
 
+    /**
+     * Get array of startAt data
+     * 
+     * @return array|null
+     */
     public function get_hour_and_minutes_form_start_at() {
         return explode(':', $this->startAt);
     }
 
+    /**
+     * Set activity model data by id
+     * 
+     * @param string id
+     * @return void
+     */
     private function set_activity_model_data_by_id($id) {
         $this->day = [];
         foreach($this->get_activity_model_data_by_id($id) as $row) {
@@ -115,6 +192,11 @@ class ActivityModel
         $this->duration = $this->set_duration();
     }
 
+    /**
+     * Calculate duration time between start and end
+     * 
+     * @return int
+     */
     private function set_duration() {
         $time1Parts = explode(":", $this->endAt);
         $time2Parts = explode(":", $this->startAt);
@@ -131,6 +213,12 @@ class ActivityModel
         return $difference;
     }
 
+    /**
+     * Get activity type from DB
+     * 
+     * @param string type
+     * @return string
+     */
     private function get_activity_type($type) {
         global $wpdb;
 
@@ -145,6 +233,12 @@ class ActivityModel
         return $type;
     }
 
+    /**
+     * Get activity model data form DB by passed id
+     * 
+     * @param string id
+     * @return array|null
+     */
     private function get_activity_model_data_by_id($id) {
         global $wpdb;
 

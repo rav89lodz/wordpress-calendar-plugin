@@ -25,10 +25,20 @@ add_action('carbon_fields_theme_options_container_saved', function() {
     $optionsPageService->update_data_after_save();
 }, 10, 2);
 
+/**
+ * Load carbon fields
+ * 
+ * @return void
+ */
 function load_carbon_fields_for_calendar_plugin() {
     Carbon_Fields::boot();
 }
 
+/**
+ * Create options page on WP menu
+ * 
+ * @return void
+ */
 function create_options_page_for_calendar_plugin() {
     $optionsPageService = new OptionsPageService;
     $langService = new LanguageService;
@@ -66,6 +76,10 @@ function create_options_page_for_calendar_plugin() {
             Field::make( 'checkbox', 'calendar_plugin_fluent_calendar_grid', $langService->optionPage['main_menu_field2_name'] )
                 ->set_option_value( '1' )
                 ->set_help_text( $langService->optionPage['main_menu_field2_description'] ),
+
+            Field::make( 'checkbox', 'calendar_plugin_horizontal_calendar_grid', $langService->optionPage['main_menu_field13_name'] )
+                ->set_option_value( '1' )
+                ->set_help_text( $langService->optionPage['main_menu_field13_description'] ),
 
             Field::make( 'checkbox', 'calendar_plugin_duration_time_on_grid', $langService->optionPage['main_menu_field3_name'] )
                 ->set_option_value( '1' )

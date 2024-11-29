@@ -56,6 +56,12 @@ if (! class_exists('CalendarPlugin')) {
     $calendarPlugin->initialize();
 }
 
+/**
+ * Die and dump
+ * 
+ * @param mixed data
+ * @return void
+ */
 function dd(...$data) {
     foreach($data as $element) {
         // var_export($element, true);

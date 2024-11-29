@@ -12,6 +12,14 @@ class ReservationModel
     private $reservationTime;
     private $activity;
 
+    private $validator;
+
+    /**
+     * Constructor
+     * 
+     * @param array|object data
+     * @return void
+     */
     public function __construct($data = null) {
         $this->userName = null;
         $this->userEmail = null;
@@ -24,49 +32,142 @@ class ReservationModel
         }
     }
 
+    /**
+     * Get userName
+     * 
+     * @return string|null
+     */
     public function get_user_name() {
         return $this->userName;
     }
 
+    /**
+     * Get userEmail
+     * 
+     * @return string|null
+     */
     public function get_user_email() {
         return $this->userEmail;
     }
 
+    /**
+     * Get reservationDate
+     * 
+     * @return string|null
+     */
     public function get_reservation_date() {
         return $this->reservationDate;
     }
 
+    /**
+     * Get reservationTime
+     * 
+     * @return string|null
+     */
     public function get_reservation_time() {
         return $this->reservationTime;
     }
 
+    /**
+     * Get activity
+     * 
+     * @return object|null
+     */
     public function get_activity() {
         return $this->activity;
     }
 
+    /**
+     * Validation for model data and set this data to properties
+     * 
+     * @param array|object data
+     * @return void
+     */
     private function set_data($data) {
-        $data = $this->validate_model_data($data, ['user_name_calendar_modal', 'user_email_calendar_modal', 'calendar_modal_day_name', 'calendar_modal_hour', 'calendar_modal_hidden_id']);
-        
-        $this->userName = $data->user_name_calendar_modal;
-        $this->userEmail = $data->user_email_calendar_modal;
-        $this->reservationDate = $data->calendar_modal_day_name;
-        $this->reservationTime = $data->calendar_modal_hour;
-        $this->activity = new ActivityModel($data->calendar_modal_hidden_id);
-    }
-
-    private function validate_model_data($object, $properties) {
-        $validator = new FormValidator;
-
-        foreach($properties as $property) {
-            if(property_exists($object, $property)) {
-                $type = 'text';
-                if(str_contains($property, 'email')) {
-                    $type = 'email';
-                }
-                $object->$property = $validator->validate($object->$property, $type);
+        $this->validator = new FormValidator;
+        foreach($data as $key => $value) {
+            switch($key) {
+                case 'user_name_calendar_modal':
+                    $this->userName = $this->validation_sequence_for_name($value);
+                    break;
+                case 'calendar_modal_day_name':
+                    $this->reservationDate = $this->validation_sequence_for_date($value);
+                    break;
+                case 'calendar_modal_hour':
+                    $this->reservationTime = $this->validation_sequence_for_time($value);
+                    break;
+                case 'user_email_calendar_modal':
+                    $this->userEmail = $this->validation_sequence_for_email($value);
+                    break;
+                case 'calendar_modal_hidden_id':
+                    $this->activity = new ActivityModel($this->validation_sequence_for_id($value));
+                    break;
             }
         }
-        
-        return $object;
+    }
+
+    /**
+     * Validation sequence for name
+     * 
+     * @param string name
+     * @return string|null
+     */
+    private function validation_sequence_for_name($name) {
+        if($this->validator->is_valid_string($name)) {
+            return $this->validator->sanitize_name($name);
+        }
+        return null;
+    }
+
+    /**
+     * Validation sequence for email
+     * 
+     * @param string email
+     * @return string|null
+     */
+    private function validation_sequence_for_email($email) {
+        if($this->validator->is_valid_email($email)) {
+            return $this->validator->sanitize_string($email);
+        }
+        return null;
+    }
+
+    /**
+     * Validation sequence for date
+     * 
+     * @param string date
+     * @return string|null
+     */
+    private function validation_sequence_for_date($date) {
+        if($this->validator->is_valid_date($date)) {
+            return $this->validator->sanitize_string($date);
+        }
+        return null;
+    }
+
+    /**
+     * Validation sequence for time
+     * 
+     * @param string time
+     * @return string|null
+     */
+    private function validation_sequence_for_time($time) {
+        if($this->validator->is_valid_time($time)) {
+            return $this->validator->sanitize_string($time);
+        }
+        return null;
+    }
+
+    /**
+     * Validation sequence for id
+     * 
+     * @param string id
+     * @return string|null
+     */
+    private function validation_sequence_for_id($id) {
+        if($this->validator->is_valid_string($id)) {
+            return $this->validator->sanitize_string($id);
+        }
+        return null;
     }
 }

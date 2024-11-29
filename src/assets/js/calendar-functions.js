@@ -53,9 +53,8 @@ function change_grid_content(xmlhttp) {
         if (xmlhttp.status === 200) {
             document.querySelector("#calendar_form_grid1").innerHTML = response.querySelector('#calendar_form_grid1').innerHTML;
             calendar_setup();
+            fluent_background_setup();
             modal_setup();
-
-            console.log(response.querySelector('#calendar_grid_short_code'));
         }
     }
     catch(error) {

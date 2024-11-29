@@ -1,5 +1,6 @@
 window.addEventListener('DOMContentLoaded', () => {
     calendar_setup();
+    fluent_background_setup();
     modal_setup();
 });
 
@@ -127,4 +128,78 @@ function modal_setup() {
             }
         });
     }
+}
+
+function fluent_background_setup() {
+    let table = document.querySelector("#calendar_form_table");
+    let tbody = table.querySelector('tbody');
+    
+    set_fluent_backgroung(tbody);
+
+    window.addEventListener('resize', function(event) {
+        set_fluent_backgroung(tbody);
+    }, true);
+
+    
+}
+
+function set_fluent_backgroung(tbody) {
+    let rows = tbody.querySelectorAll('tr');
+    let data_hours = [];
+    let data_elements = tbody.querySelectorAll('.calendar-event');
+
+    rows.forEach((r) => {
+        let td = r.querySelectorAll('td')[0];
+        data_hours[td.innerHTML] = r.offsetHeight;
+    });
+
+    data_elements.forEach((e) => {
+        let dates = e.getAttribute('data-info').split('|');
+        console.log(e.classList[2]);
+        if(dates[2] > 60) {
+            let sum = -280;
+            for (let k in data_hours) {
+                if (k >= dates[0] && k <= dates[1]) {
+                    sum += data_hours[k];
+                }
+            }
+            let end = dates[1].split(':');
+            switch(end[1]) {
+                case "55":
+                    sum += 125;
+                    break;
+                case "50":
+                    sum += 110;
+                    break;
+                case "45":
+                    sum += 95;
+                    break;
+                case "40":
+                    sum += 87;
+                    break;
+                case "35":
+                    sum += 80;
+                    break;
+                case "30":
+                    sum += 70;
+                    break;
+                case "25":
+                    sum += 59;
+                    break;
+                case "20":
+                    sum += 47;
+                    break;
+                case "15":
+                    sum += 35;
+                    break;
+                case "10":
+                    sum += 28;
+                    break;
+                case "05":
+                    sum += 15;
+                    break;
+            }
+            e.style.setProperty('--after-height', sum + 'px');
+        }
+    });
 }

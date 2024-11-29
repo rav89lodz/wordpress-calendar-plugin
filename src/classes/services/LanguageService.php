@@ -16,6 +16,11 @@ class LanguageService
     public $months;
     public $optionPage;
 
+    /**
+     * Constructor
+     *
+     * @return void
+     */
     public function __construct() {
         switch(get_locale()) {
             case 'pl_PL':
@@ -27,6 +32,9 @@ class LanguageService
         }    
     }
 
+    /**
+     * Set properties for current language
+     */
     private function set_calendar_plugin_language($lang) {
         $config = include CALENDAR_PLUGIN_PATH . '/src/lang/' . $lang . '.php';
 

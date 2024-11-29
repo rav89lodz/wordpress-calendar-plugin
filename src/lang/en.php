@@ -126,6 +126,8 @@ return [
         'main_menu_field11_name' => 'Interwał kalendarza',
         'main_menu_field12_name' => 'Wyświetlanie miejsca zajęć',
         'main_menu_field12_description' => 'Włącz tę opcję, jeśli na kafelku ma pokazywać się miejsce odbywania się zajęć',
+        'main_menu_field13_name' => 'Wyświetlanie kalendarza w poziomie',
+        'main_menu_field13_description' => 'Włącz tę opcję, jeśli kalendarz ma się wyświetlać w poziomie. Daty i dni tygodnia będą na boku, a godziny na górze siatki kalendarza',
         'main_menu_textarea_field_placeholder' => 'Wpisz treść wiadomości',
         'short_code_activity_place' => 'Użyj tego kodu (short_code), żeby wyświetlić na stronie kalendarz z danymi dla: ',
         'activity_place_title' => 'Miejsca zajęć',

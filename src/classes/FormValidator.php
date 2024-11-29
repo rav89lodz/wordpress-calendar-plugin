@@ -4,24 +4,30 @@ namespace CalendarPlugin\src\classes;
 
 class FormValidator
 {
-    public function sanitize_data_array($data) {
-        $array = [];
-        foreach ((array) $data as $label => $value) {
-            $array[$label] = $this->validate($value, $label);
-        }
-        return $array;
+    /**
+     * Sanitize string
+     * 
+     * @param string string
+     * @return string
+     */
+    public function sanitize_string($string) {
+        $string = htmlspecialchars($string);
+        $string = stripslashes($string);
+        $string = trim($string);
+        return $string;
     }
 
-    public function validate($field, $type) {
-        switch ($type) {
-            case 'email':
-                return sanitize_email($field);
-            case 'message':
-                return sanitize_textarea_field($field);
-            default:
-                return sanitize_text_field($field);
-        }
-    }
+    /**
+     * Sanitize string to name
+     * 
+     * @param string name
+     * @return string
+     */
+    public function sanitize_name($name) {
+        $name = $this->sanitize_string($name);
+        $name = str_replace(['!', '*', '{', '}', '~', '^', '|', '<', '>', '+', '&', '?', '(', ')', '[', ']', '#', '@', '$', '%', ';', '\\', '/'], "", $name);
+        return $name;
+    }    
 
     /**
      * Check value is an valid email
@@ -37,13 +43,26 @@ class FormValidator
     }
 
     /**
+     * Check value is a valid phone number
+     * 
+     * @param string phone
+     * @return bool
+     */
+    public function is_valid_phone_number($phone) {
+        if($phone !== null && preg_match("/^[\d\s\-\+]{1,20}$/", $phone)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Check value is a valid url
      * 
      * @param string url
      * @return bool
      */
     public function is_valid_url($url) {
-        if($url !== null && preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i",$url)) {
+        if($url !== null && preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $url)) {
             return true;
         }
         return false;
@@ -106,7 +125,7 @@ class FormValidator
     }
 
     /**
-     * Check value has correct date format
+     * Check value has correct date format Y-m-d
      * 
      * @param mixed value
      * @return bool
@@ -136,6 +155,24 @@ class FormValidator
         }
         return false;
     }
+
+    /**
+     * Check value is correct time format H:i:s
+     * 
+     * @param mixed value
+     * @param bool param
+     * @return bool
+     */
+    public function is_valid_time($time, $withSeconds = false) {
+        if($withSeconds === true && $time !== null && preg_match("/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/", $time)) {
+            return true;
+        }
+        if($withSeconds === false && $time !== null && preg_match("/^[0-9]{2}:[0-9]{2}$/", $time)) {
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * Check value is correct timestamp
