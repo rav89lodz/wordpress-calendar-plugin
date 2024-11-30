@@ -3,10 +3,23 @@
 namespace CalendarPlugin\src\classes\forms;
 
 use CalendarPlugin\src\classes\models\ActivityModel;
+use CalendarPlugin\src\classes\services\LanguageService;
+use CalendarPlugin\src\classes\services\ReservationService;
 
 abstract class CalendarForm
 {
-/**
+    protected $reservationService;
+    protected $langService;
+    protected $datesOnThisWeek;
+
+    public function __construct()
+    {
+        $this->reservationService = new ReservationService();
+        $this->langService = new LanguageService;
+        $this->datesOnThisWeek = [];
+    }
+
+    /**
      * Get all activities models from DB
      * 
      * @return array
@@ -50,6 +63,47 @@ abstract class CalendarForm
     }
 
     /**
+     * Create cell with data
+     * 
+     * @param object|null calendar
+     * @param object|null activity
+     * @param string currentTime
+     * @param string|int day
+     * @return void
+     */
+    protected function get_cell_with_activity($calendar, $activity, $currentTime, $day) {
+        $id = $activity->get_hidden_id() . "_" . $currentTime . "_" . $day;
+        $limit = $this->reservationService->check_reservation_limit($activity->get_hidden_id(), $this->datesOnThisWeek[$day - 1]);
+
+        $class = $this->set_fulent_background_class($calendar, $activity->get_bg_color(), $activity->get_hidden_id());
+
+        $vector = "|V";
+        if($calendar->get_horizontal_calendar_grid() === true) {
+            $vector = "|H";
+        }
+
+        if($limit >= $activity->get_slot() || $calendar->get_calendar_reservation() === false) {
+            echo "<div data-info='" . $activity->get_start_at() . "|" . $activity->get_end_at() . "|" . $activity->get_duration() . $vector . "' class='calendar-event cursor-default $class' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
+        }
+        else {
+            echo "<div data-info='" . $activity->get_start_at() . "|" . $activity->get_end_at() . "|" . $activity->get_duration() . $vector . "' class='calendar-event cursor-pointer $class' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
+        }
+        
+        if($calendar->get_duration_on_grid() === true) {
+            echo "<span>" . htmlspecialchars($activity->get_duration()) . " min</span>";
+        }
+        echo "<p class='text-wrap' style='font-weight: bold;'>" . htmlspecialchars($activity->get_name()) . "</p>";
+        if($calendar->get_place_activity_on_grid() === true) {
+            echo "<p class='text-wrap'>" . htmlspecialchars($activity->get_type()) . "</p>";
+        }
+        
+        if($calendar->get_end_time_on_grid() === true) {
+            echo "<p>" . $this->langService->calendarLabels['label_activity_end_at'] . htmlspecialchars($activity->get_end_at()) . "</p>";
+        }
+        echo "</div>";
+    }
+
+    /**
      * Create css class for fluent background option
      * 
      * @param string color
@@ -62,6 +116,14 @@ abstract class CalendarForm
             return null;
         }
         $className = "abc$classId-" . $this->generate_random_string(12);
+
+        if($calendar->get_horizontal_calendar_grid() === true) {
+            $whClassParam = "height: 100%; width: var(--after-height); top: 0%;";
+        }
+        else {
+            $whClassParam = "width: 100%; height: var(--after-height); top: 100%;";
+        }
+
         echo "<style>";
         echo '.' . $className .' {
             --after-height: 0px;
@@ -69,11 +131,9 @@ abstract class CalendarForm
         echo '.' . $className .'::after {
                 content: "";
                 position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                height: var(--after-height);
-                background-color:' . $color . ';
+                left: 0;'
+                . $whClassParam .
+                ' background-color:' . $color . ';
                 z-index: -1;
             }';
         echo "</style>";

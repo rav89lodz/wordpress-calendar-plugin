@@ -2,17 +2,12 @@
 
 namespace CalendarPlugin\src\classes\forms;
 
-use CalendarPlugin\src\classes\models\ActivityModel;
-use CalendarPlugin\src\classes\services\LanguageService;
-use CalendarPlugin\src\classes\services\ReservationService;
-
 class CalendarHorizontalForm extends CalendarForm
 {
     private $calendar;
-    private $datesOnThisWeek;
     private $shortCode;
-    private $service;
-    private $langService;
+    private $hours;
+    private $activities;
 
     /**
      * Constructor
@@ -23,11 +18,11 @@ class CalendarHorizontalForm extends CalendarForm
      */
     public function __construct($calendar = null, $shortCode = null )
     {
-        $this->calendar = $calendar;
-        $this->datesOnThisWeek = [];
-        $this->service = new ReservationService;
-        $this->langService = new LanguageService;
+        parent::__construct();
+        $this->calendar = $calendar;        
         $this->shortCode = $shortCode;
+        $this->hours = [];
+        $this->activities = $this->get_all_activities_models($this->shortCode);
     }
 
     /**
@@ -40,13 +35,20 @@ class CalendarHorizontalForm extends CalendarForm
         $endTime = strtotime($this->calendar->get_last_hour_on_calendar());
         $interval = "+" . $this->calendar->get_calendar_interval() . " minutes";
 
-        echo '<tr><th scope="col"></th>';
+        $this->hours = $this->get_all_start_time_values();
 
         while ($currentTime <= $endTime) {
-            echo '<th scope="col">' . date('H:i', $currentTime) . '</th>';
+            $this->hours[] = date('H:i', $currentTime);
             $currentTime = strtotime($interval, $currentTime);
         }
 
+        $this->hours = array_unique($this->hours);
+        sort($this->hours);
+
+        echo '<tr><th scope="col"></th>';
+        foreach($this->hours as $hour) {
+            echo '<th scope="col">' . $hour . '</th>';
+        }
         echo '</tr>';
     }
 
@@ -55,38 +57,21 @@ class CalendarHorizontalForm extends CalendarForm
      * 
      * @return void
      */
-    public function create_horizontal_table_content() {
-        $activities = $this->get_all_activities_models($this->shortCode);
-
-        $endTime = strtotime($this->calendar->get_last_hour_on_calendar());
-        $interval = "+" . $this->calendar->get_calendar_interval() . " minutes";
-        
+    public function create_horizontal_table_content() {        
         $days = $this->langService->days;
         $currentDay = $this->calendar->get_cuttent_monday_date();
 
         for($i = 0; $i < 7; $i ++) {
-            $currentTime = strtotime($this->calendar->get_first_hour_on_calendar());
             echo '<tr><th scope="col">';
             if($i > 0) {
                 $currentDay = $this->calendar->get_monday_plus_days($i);
             }
             $this->print_horizontal_header_row($days[$i], $currentDay, $i + 1);
-            $this->datesOnThisWeek[] = $currentDay;
-        
             echo "</th>";
+            foreach($this->hours as $hour) {
+                $activitiesGrouped = $this->group_activities_by_day_and_hour($this->activities, $hour, $currentDay);
 
-            while ($currentTime <= $endTime) {
-                $activitiesGrouped = $this->group_activities_by_day_and_hour($activities, date('H:i', $currentTime));
-
-                // $this->print_row_horizontal_with_data($activitiesGrouped, date('H:i', $currentTime));
-    
-                // for($min = 5; $min < $this->calendar->get_calendar_interval() - 4; $min += 5) {
-                //     $minute = date('H:i', strtotime("+$min minutes", $currentTime));
-                //     if (isset($activitiesGrouped[$minute])) {
-                //         $this->print_row_horizontal_with_data($activitiesGrouped, $minute);
-                //     }
-                // }
-                $currentTime = strtotime($interval, $currentTime);
+                $this->print_row_horizontal_with_data($activitiesGrouped, $hour, $i + 1);
             }
             echo "</tr>";
         }
@@ -99,9 +84,9 @@ class CalendarHorizontalForm extends CalendarForm
      * @param string currentTime
      * @return array
      */
-    private function group_activities_by_day_and_hour($activities, $currentTime) {
+    private function group_activities_by_day_and_hour($activities, $currentTime, $currentDay) {
         $groupedActivities = [];
-    
+
         foreach ($activities as $activity) {
             if ($activity->get_is_cyclic() == '1') {
                 foreach ($activity->get_day() as $dayOfWeek) {
@@ -109,7 +94,7 @@ class CalendarHorizontalForm extends CalendarForm
                 }
             }
             else {
-                if (in_array($activity->get_date(), $this->datesOnThisWeek)) {
+                if ($activity->get_date() == $currentDay) {
                     $dayOfWeek = date('N', strtotime($activity->get_date()));
                     $groupedActivities = $this->attach_activity_to_array($groupedActivities, $activity, $currentTime, $dayOfWeek);
                 }
@@ -130,14 +115,14 @@ class CalendarHorizontalForm extends CalendarForm
      */
     private function attach_activity_to_array($groupedActivities, $activity, $currentTime, $dayOfWeek) {
         if ($activity->get_start_at() == $currentTime) {
-            $groupedActivities[$currentTime][$dayOfWeek][] = $activity;
+            $groupedActivities[$dayOfWeek][$currentTime][] = $activity;
         }
         else {
             $minuteHour = date('H:i', strtotime($activity->get_start_at()));
-            if (!isset($groupedActivities[$minuteHour])) {
-                $groupedActivities[$minuteHour] = [];
+            if (!isset($groupedActivities[$dayOfWeek][$minuteHour])) {
+                $groupedActivities[$dayOfWeek][$minuteHour] = [];
             }
-            $groupedActivities[$minuteHour][$dayOfWeek][] = $activity;
+            $groupedActivities[$dayOfWeek][$minuteHour][] = $activity;
         }
         return $groupedActivities;
     }
@@ -149,68 +134,19 @@ class CalendarHorizontalForm extends CalendarForm
      * @param string currentTime
      * @return void
      */
-    private function print_row_horizontal_with_data($groupedActivities, $currentTime) {
-        for ($day = 1; $day <= 7; $day++) {
-            if (!empty($groupedActivities[$currentTime][$day])) {
-
-                if($this->calendar->get_fluent_calendar_grid() === false) {
-                    echo "<td>";
-                }
-                else {
-                    echo "<td><div class='flex-cell'>";
-                }
-                
-                foreach ($groupedActivities[$currentTime][$day] as $activity) {
-                    $this->get_cell_with_activity($activity, $currentTime, $day);
-                }
-                if($this->calendar->get_fluent_calendar_grid() === false) {
-                    echo "</td>";
-                }
-                else {
-                    echo "</div></td>";
-                }
+    private function print_row_horizontal_with_data($groupedActivities, $currentTime, $day) {
+        if (! empty($groupedActivities[$day][$currentTime])) {
+            echo "<td>";
+            foreach ($groupedActivities[$day][$currentTime] as $activity) {
+                $this->get_cell_with_activity($this->calendar, $activity, $currentTime, $day);
             }
-            else {
-                echo "<td></td>";
-            }
-        }
-    }
-
-    /**
-     * Create cell with data
-     * 
-     * @param object|null activity
-     * @param string currentTime
-     * @param string|int day
-     * @return void
-     */
-    private function get_cell_with_activity($activity, $currentTime, $day) {
-        $id = $activity->get_hidden_id() . "_" . $currentTime . "_" . $day;
-        $limit = $this->service->check_reservation_limit($activity->get_hidden_id(), $this->datesOnThisWeek[$day - 1]);
-
-        $class = $this->set_fulent_background_class($this->calendar, $activity->get_bg_color(), $activity->get_hidden_id());
-
-        if($limit >= $activity->get_slot() || $this->calendar->get_calendar_reservation() === false) {
-            echo "<div data-info='" . $activity->get_start_at() . "|" . $activity->get_end_at() . "|" . $activity->get_duration() . "' class='calendar-event cursor-default $class' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
+            echo "</td>";
         }
         else {
-            echo "<div data-info='" . $activity->get_start_at() . "|" . $activity->get_end_at() . "|" . $activity->get_duration() . "' class='calendar-event cursor-pointer $class' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
+            echo "<td></td>";
         }
-        
-        if($this->calendar->get_duration_on_grid() === true) {
-            echo "<span>" . htmlspecialchars($activity->get_duration()) . " min</span>";
-        }
-        echo "<p class='text-wrap' style='font-weight: bold;'>" . htmlspecialchars($activity->get_name()) . "</p>";
-        if($this->calendar->get_place_activity_on_grid() === true) {
-            echo "<p class='text-wrap'>" . htmlspecialchars($activity->get_type()) . "</p>";
-        }
-        
-        if($this->calendar->get_end_time_on_grid() === true) {
-            echo "<p>" . $this->langService->calendarLabels['label_activity_end_at'] . htmlspecialchars($activity->get_end_at()) . "</p>";
-        }
-        echo "</div>";
     }
-    
+
     /**
      * Print header row
      * 
@@ -222,5 +158,30 @@ class CalendarHorizontalForm extends CalendarForm
     private function print_horizontal_header_row($dayName, $date, $id) {
         $id = "header_$id";
         echo "<p>" . $dayName . "</p><span id='$id'>" . $date . "</span>";
+    }
+
+    /**
+     * Get all start time values of all activities on current week
+     * 
+     * @return array
+     */
+    private function get_all_start_time_values() {
+        $toReturn = [];
+        $this->datesOnThisWeek[] = $this->calendar->get_cuttent_monday_date();
+        
+        for($i = 1; $i < 7; $i ++) {
+            $this->datesOnThisWeek[] = $this->calendar->get_monday_plus_days($i);
+        }
+
+        foreach($this->activities as $activity) {
+            if(in_array($activity->get_date(), $this->datesOnThisWeek)) {
+                $toReturn[] = $activity->get_start_at();
+            }
+            if($activity->get_is_cyclic() !== null && ! empty($activity->get_is_cyclic())) {
+                $toReturn[] = $activity->get_start_at();
+            }
+        }
+
+        return $toReturn;
     }
 }
