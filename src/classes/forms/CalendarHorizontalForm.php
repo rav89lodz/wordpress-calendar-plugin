@@ -45,7 +45,7 @@ class CalendarHorizontalForm extends CalendarForm
         $this->hours = array_unique($this->hours);
         sort($this->hours);
 
-        echo '<tr><th scope="col"></th>';
+        echo '<tr><th scope="col"><input type="hidden" id="grid_vector" value="H"></th>';
         foreach($this->hours as $hour) {
             echo '<th scope="col">' . $hour . '</th>';
         }

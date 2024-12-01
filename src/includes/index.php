@@ -1,3 +1,2 @@
 <?php
-
-die("404");
+// Silence is golden.

@@ -4,6 +4,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
+use CalendarPlugin\src\classes\services\CalendarService;
 use CalendarPlugin\src\classes\services\LanguageService;
 use CalendarPlugin\src\classes\services\OptionsPageService;
 use Carbon_Fields\Carbon_Fields;
@@ -16,14 +17,14 @@ add_action( 'admin_enqueue_scripts', function() {
 	wp_enqueue_script( 'flatpickr-locale-pl', 'https://npmcdn.com/flatpickr/dist/l10n/pl.js', [ 'carbon-fields-core' ] );
 });
 
-add_filter( 'carbon_fields_theme_options_container_admin_only_access', '__return_false' );
-
 add_action('carbon_fields_register_fields', 'create_options_page_for_calendar_plugin');
 
 add_action('carbon_fields_theme_options_container_saved', function() {
     $optionsPageService = new OptionsPageService;
     $optionsPageService->update_data_after_save();
 }, 10, 2);
+
+//  add_filter( 'carbon_fields_theme_options_container_admin_only_access', '__return_false');
 
 /**
  * Load carbon fields
@@ -55,6 +56,7 @@ function create_options_page_for_calendar_plugin() {
                     Field::make( 'text', 'type_name', $langService->optionPage['activity_place_field1_name'] )
                         ->set_required( true )
                         ->set_help_text( $langService->optionPage['activity_place_field1_description'] ),
+
                     Field::make( 'hidden', 'type_key', "" ),
                 ));
 
@@ -68,6 +70,32 @@ function create_options_page_for_calendar_plugin() {
 
             Field::make( 'html', 'calendar_plugin_contact_form_short_code' )
                 ->set_html( '<h2>[contact-form-calendar1]</h2><p>' . $langService->optionPage['main_short_code_form'] . '</p>' ),
+
+            Field::make( 'checkbox', 'calendar_plugin_access_for_all', $langService->optionPage['main_menu_field14_name'] )
+                ->set_option_value( '1' )
+                ->set_help_text( $langService->optionPage['main_menu_field14_description'] ),
+
+            Field::make( 'checkbox', 'calendar_plugin_add_scroll_to_table', $langService->optionPage['main_menu_field15_name'] )
+                ->set_option_value( '1' )
+                ->set_help_text( $langService->optionPage['main_menu_field15_description'] ),
+
+            Field::make( 'text', 'calendar_plugin_grid_width', $langService->optionPage['main_menu_field16_name'] )
+                ->set_help_text( $langService->optionPage['main_menu_field16_description'] )
+                ->set_conditional_logic([
+                    [
+                        'field' => 'calendar_plugin_add_scroll_to_table',
+                        'value' => true,
+                    ]
+                ]),
+
+            Field::make( 'text', 'calendar_plugin_grid_height', $langService->optionPage['main_menu_field17_name'] )
+                ->set_help_text( $langService->optionPage['main_menu_field17_description'] )
+                ->set_conditional_logic([
+                    [
+                        'field' => 'calendar_plugin_add_scroll_to_table',
+                        'value' => true,
+                    ]
+                ]),
 
             Field::make( 'checkbox', 'calendar_plugin_make_rsv_by_calendar', $langService->optionPage['main_menu_field1_name'] )
                 ->set_option_value( '1' )
@@ -154,18 +182,22 @@ function create_options_page_for_calendar_plugin() {
                 ->set_layout( 'tabbed-horizontal' )
                 ->add_fields([
                     Field::make( 'hidden', 'activity_hidden_id', __('ID') ),
+
                     Field::make( 'text', 'activity_name', $langService->optionPage['calendar_grid_data_field1_name'] )
                         ->set_required( true ),
                     Field::make( 'time', 'activity_start_at', $langService->optionPage['calendar_grid_data_field2_name'] )
                         ->set_storage_format('H:i')
                         ->set_required( true )
                         ->set_picker_options(['time_24hr' => true, 'altFormat' => 'H:i', 'enableSeconds' => false]),
+
                     Field::make( 'time', 'activity_end_at', $langService->optionPage['calendar_grid_data_field3_name'] )
                         ->set_storage_format('H:i')
                         ->set_required( true )
                         ->set_picker_options(['time_24hr' => true, 'altFormat' => 'H:i', 'enableSeconds' => false]),
+
                     Field::make( 'checkbox', 'activity_cyclic', $langService->optionPage['calendar_grid_data_field4_name'] )
                         ->set_option_value( '1' ),
+
                     Field::make( 'date', 'activity_date', $langService->optionPage['calendar_grid_data_field5_name'])
                         ->set_help_text( $langService->optionPage['calendar_grid_data_field5_description'] )
                         ->set_required( true )
@@ -183,6 +215,7 @@ function create_options_page_for_calendar_plugin() {
                                 'value' => false,
                             ]
                         ]),
+
                     Field::make( 'multiselect', 'activity_day', $langService->optionPage['calendar_grid_data_field6_name'] )
                         ->set_options([
                             1 => $langService->days[0],
@@ -200,12 +233,15 @@ function create_options_page_for_calendar_plugin() {
                                 'value' => true,
                             ]
                         ]),
+
                     Field::make( 'color', 'activity_bg_color', $langService->optionPage['calendar_grid_data_field7_name'] )
                         ->set_help_text( $langService->optionPage['calendar_grid_data_field7_description'] ),
+
                     Field::make( 'select', 'activity_type', $langService->optionPage['calendar_grid_data_field8_name'] )
                         ->set_options( $optionsPageService->get_activity_types() )
                         ->set_help_text( $langService->optionPage['calendar_grid_data_field8_description'] )
                         ->set_required( true ),
+
                     Field::make( 'text', 'activity_slot', $langService->optionPage['calendar_grid_data_field9_name'] )
                         ->set_attribute( 'type', 'number' )
                         ->set_attribute( 'min', 1 )

@@ -27,6 +27,19 @@ $calendarService = new CalendarService($initMonth, $initDate, $shortCode);
 
 $service = new LanguageService;
 
+$width = $calendarService->calendar->get_calendar_grid_width();
+$height = $calendarService->calendar->get_calendar_grid_height();
+
+$divStyle = 'style="height: ' . $height . '; width: ' . $width . '"';
+
+if($calendarService->calendar->get_add_scroll_to_table() === true) {
+    $divStyle = ' style="overflow: auto; height: ' . $height . '; width: ' . $width . '"';
+    if($calendarService->calendar->get_horizontal_calendar_grid() === true) {
+        $divStyle = ' style="overflow: auto; height: ' . $height . '; width: ' . $width . '"';
+        echo '<style> table th { min-width: 150px; } </style>';
+    }
+}
+
 ?>
 
 <div class="alert alert-success text-center my-alert-success" role="alert">
@@ -96,7 +109,7 @@ $service = new LanguageService;
                     </div>
                 </div>
             </div>
-            <div>
+            <div <?= $divStyle ?>>
                 <table class="table table-striped table-bordered text-center calendar-table" id="calendar_form_table">
                     <?php
                         echo '<thead class="calendar-table-header">';

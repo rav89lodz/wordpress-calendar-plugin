@@ -83,6 +83,13 @@ class OptionsPageService
         foreach($rows as $row) {
             update_option( $row['option_name'], null );
         }
+
+        $rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->options WHERE option_name IN (%s, %s, %s)", ['_calendar_plugin_add_scroll_to_table', '_calendar_plugin_grid_width', '_calendar_plugin_grid_height']), ARRAY_A );
+
+        if(count($rows) === 3 && ($rows[0]['option_value'] === null || empty($rows[0]['option_value']))) {
+            update_option( $rows[1]['option_name'], null );
+            update_option( $rows[2]['option_name'], null );
+        }
     }
 
     /**

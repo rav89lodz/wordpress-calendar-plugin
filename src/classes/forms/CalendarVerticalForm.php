@@ -30,7 +30,7 @@ class CalendarVerticalForm extends CalendarForm
         $days = $this->langService->days;
         $currentDay = $this->calendar->get_cuttent_monday_date();
 
-        echo '<th scope="col">';
+        echo '<th scope="col"><input type="hidden" id="grid_vector" value="V">';
         for($i = 0; $i < 7; $i ++) {
             if($i > 0) {
                 $currentDay = $this->calendar->get_monday_plus_days($i);

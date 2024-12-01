@@ -77,16 +77,11 @@ abstract class CalendarForm
 
         $class = $this->set_fulent_background_class($calendar, $activity->get_bg_color(), $activity->get_hidden_id());
 
-        $vector = "|V";
-        if($calendar->get_horizontal_calendar_grid() === true) {
-            $vector = "|H";
-        }
-
         if($limit >= $activity->get_slot() || $calendar->get_calendar_reservation() === false) {
-            echo "<div data-info='" . $activity->get_start_at() . "|" . $activity->get_end_at() . "|" . $activity->get_duration() . $vector . "' class='calendar-event cursor-default $class' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
+            echo "<div data-info='" . $activity->get_start_at() . "|" . $activity->get_end_at() . "|" . $activity->get_duration() . "' class='calendar-event cursor-default $class' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
         }
         else {
-            echo "<div data-info='" . $activity->get_start_at() . "|" . $activity->get_end_at() . "|" . $activity->get_duration() . $vector . "' class='calendar-event cursor-pointer $class' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
+            echo "<div data-info='" . $activity->get_start_at() . "|" . $activity->get_end_at() . "|" . $activity->get_duration() . "' class='calendar-event cursor-pointer $class' id='$id' style='background-color: " . htmlspecialchars($activity->get_bg_color()) . ";'>";
         }
         
         if($calendar->get_duration_on_grid() === true) {

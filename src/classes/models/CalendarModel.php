@@ -19,6 +19,10 @@ class CalendarModel
     private $endTimeOnGrid;
     private $fulentCalendarGrid;
     private $horizontalCalendarGrid;
+    private $accessForAll;
+    private $addScrollToTable;
+    private $calendarGridWidth;
+    private $calendarGridHeight;
 
     /**
      * Constructor
@@ -52,6 +56,10 @@ class CalendarModel
         $this->endTimeOnGrid = $this->set_calendar_option('calendar_plugin_end_time_on_grid');
         $this->fulentCalendarGrid = $this->set_calendar_option('calendar_plugin_fluent_calendar_grid');
         $this->horizontalCalendarGrid = $this->set_calendar_option('calendar_plugin_horizontal_calendar_grid');
+        $this->accessForAll = $this->set_calendar_option('calendar_plugin_access_for_all');
+        $this->addScrollToTable = $this->set_calendar_option('calendar_plugin_add_scroll_to_table');
+        $this->calendarGridWidth = $this->set_calendar_grid_params('calendar_plugin_grid_width');
+        $this->calendarGridHeight = $this->set_calendar_grid_params('calendar_plugin_grid_height');
     }
 
     /**
@@ -181,6 +189,42 @@ class CalendarModel
     }
 
     /**
+     * Get accessForAll
+     * 
+     * @return bool
+     */
+    public function get_access_for_all_users() {
+        return $this->accessForAll;
+    }
+
+    /**
+     * Get addScrollToTable
+     * 
+     * @return bool
+     */
+    public function get_add_scroll_to_table() {
+        return $this->addScrollToTable;
+    }
+
+    /**
+     * Get calendarGridWidth
+     * 
+     * @return string
+     */
+    public function get_calendar_grid_width() {
+        return  $this->calendarGridWidth;
+    }
+
+    /**
+     * Get calendarGridHeight
+     * 
+     * @return string
+     */
+    public function get_calendar_grid_height() {
+        return  $this->calendarGridHeight;
+    }
+
+    /**
      * Set current monday date from passing start date
      * 
      * @param string|null startDate
@@ -227,7 +271,7 @@ class CalendarModel
     }
 
     /**
-     * Set claendar interval option by DB data
+     * Set claendar interval option from DB data
      * 
      * @return int
      */
@@ -236,6 +280,18 @@ class CalendarModel
             return 60;
         }
         return get_calendar_plugin_options('calendar_plugin_interval');
+    }
+
+    /**
+     * Set claendar grid params from DB data
+     * 
+     * @return string
+     */
+    private function set_calendar_grid_params($param) {
+        if(empty(get_calendar_plugin_options($param))) {
+            return "100%";
+        }
+        return get_calendar_plugin_options($param);
     }
 
     /**
