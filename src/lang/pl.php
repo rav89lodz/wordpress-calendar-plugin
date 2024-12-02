@@ -136,6 +136,8 @@ return [
         'main_menu_field16_description' => 'Podaj wartość dla szerokości siatki kalendarza, zgodnie ze standardami CSS, np. 100%, 1200px. Zostaw puste jeśli chcesz korzystać z wartości domyślnej: 100%',
         'main_menu_field17_name' => 'Ustaw wysokość siatki kalendarza',
         'main_menu_field17_description' => 'Podaj wartość dla wysokości siatki kalendarza, zgodnie ze standardami CSS, np. 100%, 1200px. Zostaw puste jeśli chcesz korzystać z wartości domyślnej: 100%',
+        'main_menu_field18_name' => 'Ustaw wysokość komórki kalendarza',
+        'main_menu_field18_description' => 'Podaj wartość dla wysokości komórki kalendarza, zgodnie ze standardami CSS, np. 100%, 1200px. Zostaw puste jeśli chcesz korzystać z wartości domyślnej: 130px',
         'main_menu_textarea_field_placeholder' => 'Wpisz treść wiadomości',
         'short_code_activity_place' => 'Użyj tego kodu (short_code), żeby wyświetlić na stronie kalendarz z danymi dla: ',
         'activity_place_title' => 'Miejsca zajęć',

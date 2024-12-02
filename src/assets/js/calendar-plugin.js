@@ -142,11 +142,13 @@ function set_fluent_backgroung() {
     let grid_vector = document.querySelector('#grid_vector');
     let table = document.querySelector("#calendar_form_table");
 
-    if(grid_vector.value == "V") {
-        vertical_grid_fluent(table);
-    }
-    else {
-        horizontal_grid_fluent(table);
+    if(grid_vector){
+        if(grid_vector.value == "V") {
+            vertical_grid_fluent(table);
+        }
+        else {
+            horizontal_grid_fluent(table);
+        }
     }
 }
 
@@ -169,7 +171,7 @@ function horizontal_grid_fluent(table) {
         let dates = e.getAttribute('data-info').split('|');
 
         if(dates[2] > 60) {
-            let sum = sum_fluent_cells(0, data_hours, dates);
+            let sum = sum_fluent_cells(-153, data_hours, dates);
             e.style.setProperty('--after-height', sum + 'px');
         }
     });
@@ -198,46 +200,140 @@ function vertical_grid_fluent(table) {
 }
 
 function sum_fluent_cells(sum, data_hours, dates) {
+    let calendar_grid_interval = document.querySelector('#calendar_grid_interval');
+    let interval = 60;
+    if(calendar_grid_interval) {
+        interval = calendar_grid_interval.value;
+    }
+
     for (let k in data_hours) {
         if (k >= dates[0] && k <= dates[1]) {
             sum += data_hours[k];
         }
     }
     let end = dates[1].split(':');
-    switch(end[1]) {
-        case "55":
-            sum += 125;
+    switch(interval) {
+        case '15':
+            sum += sum_for_interval_15(end[1]);
             break;
-        case "50":
-            sum += 110;
+        case '30':
+            sum += sum_for_interval_30(end[1]);
             break;
-        case "45":
-            sum += 95;
+        case '45':
+            sum += sum_for_interval_45(end[1]);
             break;
-        case "40":
-            sum += 87;
-            break;
-        case "35":
-            sum += 80;
-            break;
-        case "30":
-            sum += 70;
-            break;
-        case "25":
-            sum += 59;
-            break;
-        case "20":
-            sum += 47;
-            break;
-        case "15":
-            sum += 35;
-            break;
-        case "10":
-            sum += 28;
-            break;
-        case "05":
-            sum += 15;
+        case '60':
+            sum += sum_for_interval_60(end[1]);
             break;
     }
+    
     return sum;
+}
+
+function sum_for_interval_15(param) {
+    switch(param) {
+        case "55":
+            return 125;
+        case "50":
+            return 110;
+        case "40":
+            return 87;
+        case "35":
+            return 80;
+        case "25":
+            return 59;
+        case "20":
+            return 47;
+        case "10":
+            return 28;
+        case "05":
+            return 15;
+        default:
+            return 0;
+    }
+}
+
+function sum_for_interval_30(param) {
+    switch(param) {
+        case "55":
+            return 125;
+        case "50":
+            return 110;
+        case "45":
+            return 95;
+        case "40":
+            return 87;
+        case "35":
+            return 80;
+        case "25":
+            return 59;
+        case "20":
+            return 47;
+        case "15":
+            return 35;
+        case "10":
+            return 28;
+        case "05":
+            return 15;
+        default:
+            return 0;
+    }
+}
+
+function sum_for_interval_45(param) {
+    switch(param) {
+        case "55":
+            return 125;
+        case "50":
+            return 110;
+        case "45":
+            return 95;
+        case "40":
+            return 87;
+        case "35":
+            return 80;
+        case "30":
+            return 70;
+        case "25":
+            return 59;
+        case "20":
+            return 47;
+        case "15":
+            return 35;
+        case "10":
+            return 28;
+        case "05":
+            return 15;
+        default:
+            return 0;
+    }
+}
+
+function sum_for_interval_60(param) {
+    switch(param) {
+        case "55":
+            return 125;
+        case "50":
+            return 110;
+        case "45":
+            return 95;
+        case "40":
+            return 87;
+        case "35":
+            return 80;
+        case "30":
+            return 70;
+        case "25":
+            return 59;
+        case "20":
+            return 47;
+        case "15":
+            return 35;
+        case "10":
+            return 28;
+        case "05":
+            return 15;
+        default:
+            return 0;
+    }
 }

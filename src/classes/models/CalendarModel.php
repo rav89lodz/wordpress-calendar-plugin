@@ -23,6 +23,7 @@ class CalendarModel
     private $addScrollToTable;
     private $calendarGridWidth;
     private $calendarGridHeight;
+    private $calendarCellMinHeight;
 
     /**
      * Constructor
@@ -60,6 +61,7 @@ class CalendarModel
         $this->addScrollToTable = $this->set_calendar_option('calendar_plugin_add_scroll_to_table');
         $this->calendarGridWidth = $this->set_calendar_grid_params('calendar_plugin_grid_width');
         $this->calendarGridHeight = $this->set_calendar_grid_params('calendar_plugin_grid_height');
+        $this->calendarCellMinHeight = $this->set_calendar_cell_prarams('calendar_plugin_cell_min_height');
     }
 
     /**
@@ -225,6 +227,15 @@ class CalendarModel
     }
 
     /**
+     * Get calendarCellMinHeight
+     * 
+     * @return string
+     */
+    public function get_calendar_cell_min_height() {
+        return  $this->calendarCellMinHeight;
+    }
+
+    /**
      * Set current monday date from passing start date
      * 
      * @param string|null startDate
@@ -290,6 +301,13 @@ class CalendarModel
     private function set_calendar_grid_params($param) {
         if(empty(get_calendar_plugin_options($param))) {
             return "100%";
+        }
+        return get_calendar_plugin_options($param);
+    }
+
+    private function set_calendar_cell_prarams($param) {
+        if(empty(get_calendar_plugin_options($param))) {
+            return "130px";
         }
         return get_calendar_plugin_options($param);
     }

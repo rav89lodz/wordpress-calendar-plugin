@@ -4,7 +4,6 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-use CalendarPlugin\src\classes\services\CalendarService;
 use CalendarPlugin\src\classes\services\LanguageService;
 use CalendarPlugin\src\classes\services\OptionsPageService;
 use Carbon_Fields\Carbon_Fields;
@@ -24,7 +23,7 @@ add_action('carbon_fields_theme_options_container_saved', function() {
     $optionsPageService->update_data_after_save();
 }, 10, 2);
 
-//  add_filter( 'carbon_fields_theme_options_container_admin_only_access', '__return_false');
+// add_filter( 'carbon_fields_theme_options_container_admin_only_access', '__return_false');
 
 /**
  * Load carbon fields
@@ -108,6 +107,15 @@ function create_options_page_for_calendar_plugin() {
             Field::make( 'checkbox', 'calendar_plugin_horizontal_calendar_grid', $langService->optionPage['main_menu_field13_name'] )
                 ->set_option_value( '1' )
                 ->set_help_text( $langService->optionPage['main_menu_field13_description'] ),
+
+            Field::make( 'text', 'calendar_plugin_cell_min_height', $langService->optionPage['main_menu_field18_name'] )
+                ->set_help_text( $langService->optionPage['main_menu_field18_description'] )
+                ->set_conditional_logic([
+                    [
+                        'field' => 'calendar_plugin_horizontal_calendar_grid',
+                        'value' => true,
+                    ]
+                ]),
 
             Field::make( 'checkbox', 'calendar_plugin_duration_time_on_grid', $langService->optionPage['main_menu_field3_name'] )
                 ->set_option_value( '1' )

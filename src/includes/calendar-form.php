@@ -112,6 +112,7 @@ function create_reservation_page() {
             'name' => $service->reservationMenu['name'],
             'singular_name' => $service->reservationMenu['singular_name'],
         ],
+        'show_in_menu' => true,
         'capability_type' => 'post',
         'capabilities' => [
             'create_posts' => false,

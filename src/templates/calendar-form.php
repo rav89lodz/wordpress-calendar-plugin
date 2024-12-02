@@ -40,6 +40,10 @@ if($calendarService->calendar->get_add_scroll_to_table() === true) {
     }
 }
 
+if($calendarService->calendar->get_horizontal_calendar_grid() === true) {
+    echo '<style> .calendar-event {min-height: ' . $calendarService->calendar->get_calendar_cell_min_height() . '} .calendar-table td { height: 100% } </style>';
+}
+
 ?>
 
 <div class="alert alert-success text-center my-alert-success" role="alert">
@@ -51,6 +55,7 @@ if($calendarService->calendar->get_add_scroll_to_table() === true) {
 
 <input type="hidden" id="get_rest_url" value="<?= get_rest_url(null, 'v1') ?>">
 <input type="hidden" id="calendar_grid_short_code" value="<?= $insertShort ?>">
+<input type="hidden" id="calendar_grid_interval" value="<?= $calendarService->calendar->get_calendar_interval() ?>">
 
 <div id="calendar_form_grid1" class="mt-5 mb-5">
     <div>
