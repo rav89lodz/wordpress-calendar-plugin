@@ -70,31 +70,35 @@ function create_options_page_for_calendar_plugin() {
             Field::make( 'html', 'calendar_plugin_contact_form_short_code' )
                 ->set_html( '<h2>[contact-form-calendar1]</h2><p>' . $langService->optionPage['main_short_code_form'] . '</p>' ),
 
-            Field::make( 'checkbox', 'calendar_plugin_access_for_all', $langService->optionPage['main_menu_field14_name'] )
+            Field::make( 'checkbox', 'calendar_plugin_one_day_view', $langService->optionPage['main_menu_field19_name'] )
                 ->set_option_value( '1' )
-                ->set_help_text( $langService->optionPage['main_menu_field14_description'] ),
+                ->set_help_text( $langService->optionPage['main_menu_field19_description'] ),
+
+            Field::make( 'checkbox', 'calendar_plugin_horizontal_calendar_grid', $langService->optionPage['main_menu_field13_name'] )
+                ->set_option_value( '1' )
+                ->set_help_text( $langService->optionPage['main_menu_field13_description'] )
+                ->set_conditional_logic([
+                    [
+                        'field' => 'calendar_plugin_one_day_view',
+                        'value' => false,
+                    ]
+                ]),
+
+            Field::make( 'text', 'calendar_plugin_cell_min_height', $langService->optionPage['main_menu_field18_name'] )
+                ->set_attribute( 'type', 'number' )
+                ->set_help_text( $langService->optionPage['main_menu_field18_description'] ),
 
             Field::make( 'checkbox', 'calendar_plugin_add_scroll_to_table', $langService->optionPage['main_menu_field15_name'] )
                 ->set_option_value( '1' )
                 ->set_help_text( $langService->optionPage['main_menu_field15_description'] ),
 
             Field::make( 'text', 'calendar_plugin_grid_width', $langService->optionPage['main_menu_field16_name'] )
-                ->set_help_text( $langService->optionPage['main_menu_field16_description'] )
-                ->set_conditional_logic([
-                    [
-                        'field' => 'calendar_plugin_add_scroll_to_table',
-                        'value' => true,
-                    ]
-                ]),
+                ->set_attribute( 'type', 'number' )
+                ->set_help_text( $langService->optionPage['main_menu_field16_description'] ),
 
             Field::make( 'text', 'calendar_plugin_grid_height', $langService->optionPage['main_menu_field17_name'] )
-                ->set_help_text( $langService->optionPage['main_menu_field17_description'] )
-                ->set_conditional_logic([
-                    [
-                        'field' => 'calendar_plugin_add_scroll_to_table',
-                        'value' => true,
-                    ]
-                ]),
+                ->set_attribute( 'type', 'number' )
+                ->set_help_text( $langService->optionPage['main_menu_field17_description'] ),
 
             Field::make( 'checkbox', 'calendar_plugin_make_rsv_by_calendar', $langService->optionPage['main_menu_field1_name'] )
                 ->set_option_value( '1' )
@@ -103,19 +107,6 @@ function create_options_page_for_calendar_plugin() {
             Field::make( 'checkbox', 'calendar_plugin_fluent_calendar_grid', $langService->optionPage['main_menu_field2_name'] )
                 ->set_option_value( '1' )
                 ->set_help_text( $langService->optionPage['main_menu_field2_description'] ),
-
-            Field::make( 'checkbox', 'calendar_plugin_horizontal_calendar_grid', $langService->optionPage['main_menu_field13_name'] )
-                ->set_option_value( '1' )
-                ->set_help_text( $langService->optionPage['main_menu_field13_description'] ),
-
-            Field::make( 'text', 'calendar_plugin_cell_min_height', $langService->optionPage['main_menu_field18_name'] )
-                ->set_help_text( $langService->optionPage['main_menu_field18_description'] )
-                ->set_conditional_logic([
-                    [
-                        'field' => 'calendar_plugin_horizontal_calendar_grid',
-                        'value' => true,
-                    ]
-                ]),
 
             Field::make( 'checkbox', 'calendar_plugin_duration_time_on_grid', $langService->optionPage['main_menu_field3_name'] )
                 ->set_option_value( '1' )
@@ -172,7 +163,7 @@ function create_options_page_for_calendar_plugin() {
 
             Field::make( 'select', 'calendar_plugin_interval', $langService->optionPage['main_menu_field11_name'] )
             ->set_options([
-                '15' => '00:15', '30' => '00:30', '45' => '00:45', '60' => '01:00', 
+                '15' => '00:15', '30' => '00:30', '60' => '01:00', 
             ])
             ->set_required( true ),
         ]);

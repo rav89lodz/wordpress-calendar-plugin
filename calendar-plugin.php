@@ -43,6 +43,7 @@ if (! class_exists('CalendarPlugin')) {
 
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/forms/CalendarForm.php');
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/forms/CalendarHorizontalForm.php');
+            require_once(CALENDAR_PLUGIN_PATH . '/src/classes/forms/CalendarOneDayForm.php');
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/forms/CalendarVerticalForm.php');
 
             require_once(CALENDAR_PLUGIN_PATH . '/src/classes/FormValidator.php');

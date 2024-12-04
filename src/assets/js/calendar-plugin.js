@@ -11,43 +11,84 @@ function calendar_setup() {
         get_rest_url_value = get_rest_url.value;
     }
 
+    let calendar_date_picker = document.querySelector('#calendar_date_picker');
+    if(calendar_date_picker) {
+        calendar_date_picker.addEventListener('change', (e) => {
+            e.preventDefault();
+            let final_date = new Date(e.target.value);
+            let url = get_rest_url_value + "/calendar-grid-change/week";
+            send_request_for_dates(final_date, url);
+        });
+    }
+
     let arrow_control = document.querySelector('#arrow_control');
     if(arrow_control) {
+        let one_day_name = document.querySelector('#one_day_name');
+
+        if(one_day_name) {
+            let final_date = new Date(one_day_name.innerHTML);
+
+            let one_day_arrow_left = document.querySelector('#one_day_arrow_left');
+            if(one_day_arrow_left) {
+                one_day_arrow_left.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    let url = get_rest_url_value + "/calendar-grid-change/week";
+                    send_request_for_dates(final_date.addOrSubtractDays(1, '-'), url);
+                });
+            }
+
+            let one_day_arrow_right = document.querySelector('#one_day_arrow_right');
+            if(one_day_arrow_right) {
+                one_day_arrow_right.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    let url = get_rest_url_value + "/calendar-grid-change/week";
+                    send_request_for_dates(final_date.addOrSubtractDays(1, '+'), url);
+                });
+            }
+        }
+
         let week_dates = document.querySelector('#week_dates');
-        week_dates = week_dates.innerText.split(" <-> ");
-        let final_date = new Date(week_dates[0]);
 
-        let month_arrow_left = document.querySelector('#month_arrow_left');
-        if(month_arrow_left) {
-            month_arrow_left.addEventListener('click', (e) => {
-                e.preventDefault();
-                let url = get_rest_url_value + "/calendar-grid-change/month";
-                send_request_for_month(final_date.addOrSubtractMonth(1, '-'), url);
-            });
+        if(week_dates) {
+            week_dates = week_dates.innerText.split(" <-> ");
+            let final_date = new Date(week_dates[0]);
+
+            let month_arrow_left = document.querySelector('#month_arrow_left');
+            if(month_arrow_left) {
+                month_arrow_left.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    let url = get_rest_url_value + "/calendar-grid-change/month";
+                    send_request_for_dates(final_date.addOrSubtractMonth(1, '-'), url);
+                });
+            }
+
+            let month_arrow_right = document.querySelector('#month_arrow_right');
+            if(month_arrow_right) {
+                month_arrow_right.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    let url = get_rest_url_value + "/calendar-grid-change/month";
+                    send_request_for_dates(final_date.addOrSubtractMonth(1, '+'), url);
+                });
+            }
+
+            let week_arrow_left = document.querySelector('#week_arrow_left');
+            if(week_arrow_left) {
+                week_arrow_left.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    let url = get_rest_url_value + "/calendar-grid-change/week";
+                    send_request_for_dates(final_date.addOrSubtractDays(7, '-'), url);
+                });
+            }
+
+            let week_arrow_right = document.querySelector('#week_arrow_right');
+            if(week_arrow_right) {
+                week_arrow_right.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    let url = get_rest_url_value + "/calendar-grid-change/week";
+                    send_request_for_dates(final_date.addOrSubtractDays(7, '+'), url);
+                });
+            }
         }
-
-        let month_arrow_right = document.querySelector('#month_arrow_right');
-        month_arrow_right.addEventListener('click', (e) => {
-            e.preventDefault();
-            let url = get_rest_url_value + "/calendar-grid-change/month";
-            send_request_for_month(final_date.addOrSubtractMonth(1, '+'), url);
-        });
-
-        let week_arrow_left = document.querySelector('#week_arrow_left');
-        if(week_arrow_left) {
-            week_arrow_left.addEventListener('click', (e) => {
-                e.preventDefault();
-                let url = get_rest_url_value + "/calendar-grid-change/week";
-                send_request_for_week(final_date.addOrSubtractDays(7, '-'), url);
-            });
-        }
-
-        let week_arrow_right = document.querySelector('#week_arrow_right');
-        week_arrow_right.addEventListener('click', (e) => {
-            e.preventDefault();
-            let url = get_rest_url_value + "/calendar-grid-change/week";
-            send_request_for_week(final_date.addOrSubtractDays(7, '+'), url);
-        });
     }
 }
 
@@ -169,11 +210,8 @@ function horizontal_grid_fluent(table) {
 
     data_elements.forEach((e) => {
         let dates = e.getAttribute('data-info').split('|');
-
-        if(dates[2] > 60) {
-            let sum = sum_fluent_cells(-153, data_hours, dates);
-            e.style.setProperty('--after-height', sum + 'px');
-        }
+        let sum = sum_fluent_cells(-153, data_hours, dates);
+        e.style.setProperty('--after-height', sum + 'px');
     });
 }
 
@@ -183,6 +221,13 @@ function vertical_grid_fluent(table) {
     let data_elements = tbody.querySelectorAll('.calendar-event');
     let rows = tbody.querySelectorAll('tr');
 
+    let calendar_table_td = document.querySelector('#calendar_table_td');
+    let calendar_table_td_value = -280;
+
+    if(calendar_table_td) {
+        calendar_table_td_value = calendar_table_td.value * 2 * -1;
+    }
+
     let data_hours = [];
     rows.forEach((r) => {
         let td = r.querySelectorAll('td')[0];
@@ -191,11 +236,8 @@ function vertical_grid_fluent(table) {
 
     data_elements.forEach((e) => {
         let dates = e.getAttribute('data-info').split('|');
-
-        if(dates[2] > 60) {
-            let sum = sum_fluent_cells(-280, data_hours, dates);
-            e.style.setProperty('--after-height', sum + 'px');
-        }
+        let sum = sum_fluent_cells(calendar_table_td_value, data_hours, dates);
+        e.style.setProperty('--after-height', sum + 'px');
     });
 }
 
@@ -212,128 +254,18 @@ function sum_fluent_cells(sum, data_hours, dates) {
         }
     }
     let end = dates[1].split(':');
-    switch(interval) {
-        case '15':
-            sum += sum_for_interval_15(end[1]);
-            break;
-        case '30':
-            sum += sum_for_interval_30(end[1]);
-            break;
-        case '45':
-            sum += sum_for_interval_45(end[1]);
-            break;
-        case '60':
-            sum += sum_for_interval_60(end[1]);
-            break;
-    }
+    console.log(sum_for_interval(end[1]));
+    sum += sum_for_interval(end[1]);
     
     return sum;
 }
 
-function sum_for_interval_15(param) {
-    switch(param) {
-        case "55":
-            return 125;
-        case "50":
-            return 110;
-        case "40":
-            return 87;
-        case "35":
-            return 80;
-        case "25":
-            return 59;
-        case "20":
-            return 47;
-        case "10":
-            return 28;
-        case "05":
-            return 15;
-        default:
-            return 0;
-    }
-}
+function sum_for_interval(minutes) {
+    let calendar_table_td = document.querySelector('#calendar_table_td');
+    let calendar_table_td_value = 140;
 
-function sum_for_interval_30(param) {
-    switch(param) {
-        case "55":
-            return 125;
-        case "50":
-            return 110;
-        case "45":
-            return 95;
-        case "40":
-            return 87;
-        case "35":
-            return 80;
-        case "25":
-            return 59;
-        case "20":
-            return 47;
-        case "15":
-            return 35;
-        case "10":
-            return 28;
-        case "05":
-            return 15;
-        default:
-            return 0;
+    if(calendar_table_td) {
+        calendar_table_td_value = calendar_table_td.value;
     }
-}
-
-function sum_for_interval_45(param) {
-    switch(param) {
-        case "55":
-            return 125;
-        case "50":
-            return 110;
-        case "45":
-            return 95;
-        case "40":
-            return 87;
-        case "35":
-            return 80;
-        case "30":
-            return 70;
-        case "25":
-            return 59;
-        case "20":
-            return 47;
-        case "15":
-            return 35;
-        case "10":
-            return 28;
-        case "05":
-            return 15;
-        default:
-            return 0;
-    }
-}
-
-function sum_for_interval_60(param) {
-    switch(param) {
-        case "55":
-            return 125;
-        case "50":
-            return 110;
-        case "45":
-            return 95;
-        case "40":
-            return 87;
-        case "35":
-            return 80;
-        case "30":
-            return 70;
-        case "25":
-            return 59;
-        case "20":
-            return 47;
-        case "15":
-            return 35;
-        case "10":
-            return 28;
-        case "05":
-            return 15;
-        default:
-            return 0;
-    }
+    return(calendar_table_td_value / 60) * minutes;
 }

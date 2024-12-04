@@ -37,7 +37,7 @@ class AddActivityService
         $isSended = $this->utils->send_email_with_data($message, $subject, $replayTo);
 
         if($isSended === false) {
-            return $this->utils->set_success_error_message_with_code($this->model->get_activity_user_name(), 422);
+            return $this->utils->set_success_error_message_with_code($this->model->get_activity_user_name(), 422, 98);
         }
         return $this->utils->set_success_error_message_with_code($this->model->get_activity_user_name(), 200, 2);
     }

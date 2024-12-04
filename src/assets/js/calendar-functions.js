@@ -19,14 +19,9 @@ Date.prototype.addOrSubtractMonth = function(months, operator) {
     return date;
 }
 
-function send_request_for_month(month_date, url) {
-    month_date = month_date.toISOString();
-    send_request_with_data(month_date, url);
-}
-
-function send_request_for_week(week_date, url) {
-    week_date = week_date.toISOString();
-    send_request_with_data(week_date, url);
+function send_request_for_dates(param_date, url) {
+    param_date = param_date.toISOString();
+    send_request_with_data(param_date, url);
 }
 
 function send_request_with_data(data, url) {

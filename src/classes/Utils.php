@@ -40,6 +40,9 @@ class Utils
             case 2:
                 $message = $this->model->get_message_form_sended() ??  $this->service->calendarLabels['default_success_message'];
                 break;
+            case 98:
+                $message = $this->service->calendarLabels['email_error_message'];
+                break;
             default:
                 $message = $this->model->get_message_error() ??  $this->service->calendarLabels['default_error_message'];
                 break;

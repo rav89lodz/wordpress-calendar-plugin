@@ -28,6 +28,11 @@ function show_calendar_grid($post_id = null) {
 }
 
 add_action('rest_api_init', function() {
+    register_rest_route('v1/calendar-grid-change', 'day', [
+        'methods' => 'POST',
+        'callback' => 'handle_calendar_grid_change_day',
+        'permission_callback' => [],
+    ]);
     register_rest_route('v1/calendar-grid-change', 'week', [
         'methods' => 'POST',
         'callback' => 'handle_calendar_grid_change_week',
@@ -51,12 +56,12 @@ add_action('rest_api_init', function() {
  * @param mixed data
  * @return string|false
  */
-function handle_calendar_grid_change_month($data) {
+function handle_calendar_grid_change_day($data) {
     $data = json_decode($data->get_body());
-    $_POST['calendar_grid_change_month'] = $data->data;
+    $_POST['calendar_grid_change_date'] = $data->data;
     $utils = new Utils;
     $_POST['calendar_grid_short_code'] = $utils->prepare_current_short_codes("[" . $data->short_code . "]");
-    
+   
     ob_start();
         include( CALENDAR_PLUGIN_PATH . '/src/templates/calendar-form.php' );
     return ob_get_clean();
@@ -70,10 +75,27 @@ function handle_calendar_grid_change_month($data) {
  */
 function handle_calendar_grid_change_week($data) {
     $data = json_decode($data->get_body());
-    $_POST['calendar_grid_change_week'] = $data->data;
+    $_POST['calendar_grid_change_date'] = $data->data;
     $utils = new Utils;
     $_POST['calendar_grid_short_code'] = $utils->prepare_current_short_codes("[" . $data->short_code . "]");
    
+    ob_start();
+        include( CALENDAR_PLUGIN_PATH . '/src/templates/calendar-form.php' );
+    return ob_get_clean();
+}
+
+/**
+ * Handle rest API endpoint
+ * 
+ * @param mixed data
+ * @return string|false
+ */
+function handle_calendar_grid_change_month($data) {
+    $data = json_decode($data->get_body());
+    $_POST['calendar_grid_change_month'] = $data->data;
+    $utils = new Utils;
+    $_POST['calendar_grid_short_code'] = $utils->prepare_current_short_codes("[" . $data->short_code . "]");
+    
     ob_start();
         include( CALENDAR_PLUGIN_PATH . '/src/templates/calendar-form.php' );
     return ob_get_clean();

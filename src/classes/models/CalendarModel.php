@@ -19,11 +19,11 @@ class CalendarModel
     private $endTimeOnGrid;
     private $fulentCalendarGrid;
     private $horizontalCalendarGrid;
-    private $accessForAll;
     private $addScrollToTable;
     private $calendarGridWidth;
     private $calendarGridHeight;
     private $calendarCellMinHeight;
+    private $calendarOneDayView;
 
     /**
      * Constructor
@@ -46,7 +46,7 @@ class CalendarModel
         else {
             $this->currentMonthName = $this->set_current_month_name($monthNumber);
         }
-        $this->currentDate = $this->set_current_date();
+        $this->currentDate = $this->set_current_date($startDate);
         $this->currentTime = $this->set_current_time();
         $this->firstHourOnCalendar = $this->set_first_hour_on_calendar();
         $this->lastHourOnCalendar = $this->set_last_hour_on_calendar();
@@ -57,11 +57,11 @@ class CalendarModel
         $this->endTimeOnGrid = $this->set_calendar_option('calendar_plugin_end_time_on_grid');
         $this->fulentCalendarGrid = $this->set_calendar_option('calendar_plugin_fluent_calendar_grid');
         $this->horizontalCalendarGrid = $this->set_calendar_option('calendar_plugin_horizontal_calendar_grid');
-        $this->accessForAll = $this->set_calendar_option('calendar_plugin_access_for_all');
         $this->addScrollToTable = $this->set_calendar_option('calendar_plugin_add_scroll_to_table');
         $this->calendarGridWidth = $this->set_calendar_grid_params('calendar_plugin_grid_width');
         $this->calendarGridHeight = $this->set_calendar_grid_params('calendar_plugin_grid_height');
         $this->calendarCellMinHeight = $this->set_calendar_cell_prarams('calendar_plugin_cell_min_height');
+        $this->calendarOneDayView = $this->set_calendar_option('calendar_plugin_one_day_view');
     }
 
     /**
@@ -191,15 +191,6 @@ class CalendarModel
     }
 
     /**
-     * Get accessForAll
-     * 
-     * @return bool
-     */
-    public function get_access_for_all_users() {
-        return $this->accessForAll;
-    }
-
-    /**
      * Get addScrollToTable
      * 
      * @return bool
@@ -233,6 +224,15 @@ class CalendarModel
      */
     public function get_calendar_cell_min_height() {
         return  $this->calendarCellMinHeight;
+    }
+
+    /**
+     * Get calendarOneDayView
+     * 
+     * @return string
+     */
+    public function get_calendar_one_day_view() {
+        return $this->calendarOneDayView;
     }
 
     /**
@@ -299,12 +299,21 @@ class CalendarModel
      * @return string
      */
     private function set_calendar_grid_params($param) {
-        if(empty(get_calendar_plugin_options($param))) {
+        if(empty(get_calendar_plugin_options($param)) && str_contains($param, "height")) {
             return "100%";
+        }
+        if(empty(get_calendar_plugin_options($param)) && str_contains($param, "width")) {
+            return "1200px";
         }
         return get_calendar_plugin_options($param);
     }
 
+    /**
+     * Set calendar cell prarams
+     * 
+     * @param string param
+     * @return string
+     */
     private function set_calendar_cell_prarams($param) {
         if(empty(get_calendar_plugin_options($param))) {
             return "130px";
@@ -315,10 +324,14 @@ class CalendarModel
     /**
      * Set current date in format Y-m-d
      * 
+     * @param string|null date
      * @return string
      */
-    private function set_current_date() {
-        return date('Y-m-d');
+    private function set_current_date($date) {
+        if($date === null) {
+            return date('Y-m-d');
+        }
+        return date('Y-m-d', strtotime($date));
     }
 
     /**

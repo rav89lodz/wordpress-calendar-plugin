@@ -36,8 +36,11 @@ class ReservationService
 
         $isSended = $this->utils->send_email_with_data($message[0], $subject, $replayTo);
 
-        if($message[1] === false || $isSended === false) {
+        if($message[1] === false) {
             return $this->utils->set_success_error_message_with_code($this->model->get_user_name(), 422);
+        }
+        if($isSended === false) {
+            return $this->utils->set_success_error_message_with_code($this->model->get_user_name(), 422, 98);
         }
         return $this->utils->set_success_error_message_with_code($this->model->get_user_name(), 200, 1);
     }
