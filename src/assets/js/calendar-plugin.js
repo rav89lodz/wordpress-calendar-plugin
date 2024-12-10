@@ -140,6 +140,7 @@ function modal_setup() {
             calendar_modal_hidden_id.value = null;
             calendar_modal_day_name_input.value = null;
             calendar_modal_hour_input.value = null;
+			window.scrollTo(0,0);
         });
 
         calendar_form_table.addEventListener('click', (e) => {
@@ -174,7 +175,7 @@ function modal_setup() {
 function fluent_background_setup() {  
     set_fluent_backgroung();
 
-    window.addEventListener('resize', function(event) {
+    window.addEventListener('resize', () => {
         set_fluent_backgroung();
     }, true);
 }
@@ -201,16 +202,18 @@ function horizontal_grid_fluent(table) {
     let data_elements = tbody.querySelectorAll('.calendar-event');
 
     let data_hours = [];
+    let iterator = 0;
     rows.forEach((r) => {
         if(r.innerHTML.includes('hidden')) {
             return;
         }
-        data_hours[r.innerHTML] = r.offsetWidth;
+        data_hours[iterator] = r.innerHTML + ">>" + r.offsetWidth;
+        iterator++;
     });
 
     data_elements.forEach((e) => {
         let dates = e.getAttribute('data-info').split('|');
-        let sum = sum_fluent_cells(-153, data_hours, dates);
+        let sum = sum_fluent_cells(data_hours, dates);
         e.style.setProperty('--after-height', sum + 'px');
     });
 }
@@ -221,51 +224,59 @@ function vertical_grid_fluent(table) {
     let data_elements = tbody.querySelectorAll('.calendar-event');
     let rows = tbody.querySelectorAll('tr');
 
-    let calendar_table_td = document.querySelector('#calendar_table_td');
-    let calendar_table_td_value = -280;
-
-    if(calendar_table_td) {
-        calendar_table_td_value = calendar_table_td.value * 2 * -1;
-    }
-
     let data_hours = [];
+    let iterator = 0;
     rows.forEach((r) => {
         let td = r.querySelectorAll('td')[0];
-        data_hours[td.innerHTML] = r.offsetHeight;
+        data_hours[iterator] = td.innerHTML + ">>" + r.offsetHeight;
+        iterator++;
     });
 
     data_elements.forEach((e) => {
         let dates = e.getAttribute('data-info').split('|');
-        let sum = sum_fluent_cells(calendar_table_td_value, data_hours, dates);
+        let sum = sum_fluent_cells(data_hours, dates);
         e.style.setProperty('--after-height', sum + 'px');
     });
 }
 
-function sum_fluent_cells(sum, data_hours, dates) {
+function sum_fluent_cells(data_hours, dates) {
+    let sum = 0;
+    let last_hour_key = 0;
+
+    for(let i = 0; i < data_hours.length; i ++) {
+        let key_val = data_hours[i].split('>>');
+
+        if(key_val[0] > dates[0] && key_val[0] <= dates[1]) {
+            sum += parseInt(key_val[1]);
+            last_hour_key = i;
+        }
+    }
+
+    let last_hour = data_hours[last_hour_key].split('>>');
+    const [hours1, minutes1] = dates[1].split(':').map(Number);
+    const [hours2, minutes2] = last_hour[0].split(':').map(Number);
+
+    const totalMinutes1 = hours1 * 60 + minutes1;
+    const totalMinutes2 = hours2 * 60 + minutes2;
+
+    if(totalMinutes1 > totalMinutes2) {
+        let next_hour = 140;
+        if(data_hours[last_hour_key + 1] !== undefined) {
+            next_hour = data_hours[last_hour_key + 1].split('>>');
+        }
+        sum += sum_for_interval(minutes1, next_hour[1]);
+    }
+    
+    return sum - last_hour[1];
+}
+
+function sum_for_interval(minutes, td_height) {
     let calendar_grid_interval = document.querySelector('#calendar_grid_interval');
     let interval = 60;
+    
     if(calendar_grid_interval) {
         interval = calendar_grid_interval.value;
     }
 
-    for (let k in data_hours) {
-        if (k >= dates[0] && k <= dates[1]) {
-            sum += data_hours[k];
-        }
-    }
-    let end = dates[1].split(':');
-    console.log(sum_for_interval(end[1]));
-    sum += sum_for_interval(end[1]);
-    
-    return sum;
-}
-
-function sum_for_interval(minutes) {
-    let calendar_table_td = document.querySelector('#calendar_table_td');
-    let calendar_table_td_value = 140;
-
-    if(calendar_table_td) {
-        calendar_table_td_value = calendar_table_td.value;
-    }
-    return(calendar_table_td_value / 60) * minutes;
+    return (td_height / interval) * minutes;
 }

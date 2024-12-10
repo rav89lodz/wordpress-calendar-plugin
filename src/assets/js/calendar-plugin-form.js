@@ -32,6 +32,7 @@ function calendar_form_setup() {
                 e.preventDefault();
                 calendar_form_submit(url, 'calendar_modal_form_add_activity');
                 modal_form_object.hide();
+				window.scrollTo(0,0);
             });
         }
     }

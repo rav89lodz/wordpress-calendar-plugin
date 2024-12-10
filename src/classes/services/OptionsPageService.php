@@ -93,8 +93,8 @@ class OptionsPageService
 
         $rows = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->options WHERE option_name IN (%s, %s)", ['_calendar_plugin_one_day_view', '_calendar_plugin_horizontal_calendar_grid']), ARRAY_A );
 
-        if(count($rows) === 2 && $rows[2]['option_value'] !== null && ! empty($rows[2]['option_value'])) {
-            update_option( $rows[1]['option_name'], null );
+        if(count($rows) === 2 && $rows[1]['option_value'] !== null && ! empty($rows[1]['option_value'])) {
+            update_option( $rows[0]['option_name'], null );
         }
     }
 

@@ -316,7 +316,7 @@ class CalendarModel
      */
     private function set_calendar_cell_prarams($param) {
         if(empty(get_calendar_plugin_options($param))) {
-            return "130px";
+            return 130;
         }
         return get_calendar_plugin_options($param);
     }

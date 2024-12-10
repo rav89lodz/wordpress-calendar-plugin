@@ -41,12 +41,11 @@ if($calendarService->calendar->get_add_scroll_to_table() === true) {
 }
 
 if(! empty($calendarService->calendar->get_calendar_cell_min_height())) {
-    echo '<style> .calendar-table td {height: ' . $calendarService->calendar->get_calendar_cell_min_height() . 'px } </style>';
-    echo '<input type="hidden" id="calendar_table_td" value="' . $calendarService->calendar->get_calendar_cell_min_height() . '">';
+    echo '<style> .calendar-table td {height: ' . $calendarService->calendar->get_calendar_cell_min_height() . 'px } .calendar-event {height: ' . $calendarService->calendar->get_calendar_cell_min_height() . 'px } </style>';
 }
 
 if ($calendarService->calendar->get_calendar_one_day_view() === true) {
-    echo '<style> .calendar-event { width: 33%; } </style>';
+    echo '<style> .calendar-event { width: 22%; } </style>';
 }
 
 ?>
