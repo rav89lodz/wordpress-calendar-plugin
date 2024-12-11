@@ -69,10 +69,11 @@ abstract class CalendarForm
      * @param object|null activity
      * @param string currentTime
      * @param string|int day
+     * @param string|null oneDayId
      * @return void
      */
-    protected function get_cell_with_activity($calendar, $activity, $currentTime, $day) {
-        $id = $activity->get_hidden_id() . "_" . $currentTime . "_" . $day;
+    protected function get_cell_with_activity($calendar, $activity, $currentTime, $day, $oneDayId = null) {
+        $id = $activity->get_hidden_id() . "_" . $currentTime . "_" . $day . $oneDayId;
         $limit = $this->reservationService->check_reservation_limit($activity->get_hidden_id(), $this->datesOnThisWeek[$day - 1]);
 
         $class = $this->set_fulent_background_class($calendar, $activity->get_bg_color(), $activity->get_hidden_id());

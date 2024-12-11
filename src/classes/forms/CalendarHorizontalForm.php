@@ -136,11 +136,11 @@ class CalendarHorizontalForm extends CalendarForm
      */
     private function print_row_horizontal_with_data($groupedActivities, $currentTime, $day) {
         if (! empty($groupedActivities[$day][$currentTime])) {
-            echo "<td>";
+            echo "<td><div>";
             foreach ($groupedActivities[$day][$currentTime] as $activity) {
                 $this->get_cell_with_activity($this->calendar, $activity, $currentTime, $day);
             }
-            echo "</td>";
+            echo "</div></td>";
         }
         else {
             echo "<td></td>";

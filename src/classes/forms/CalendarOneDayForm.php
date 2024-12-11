@@ -36,7 +36,7 @@ class CalendarOneDayForm extends CalendarForm
         }
 
         echo '<input type="hidden" id="grid_vector" value="V">';
-        $this->print_header_row($currentDay, 1);
+        $this->print_header_row($currentDay, $this->currentWeekDay);
         $this->datesOnThisWeek[] = $currentDay;
     }
 
@@ -133,7 +133,7 @@ class CalendarOneDayForm extends CalendarForm
         if (! empty($groupedActivities[$currentTime][$day])) {
             echo "<td><div class='flex-cell'>";
             foreach ($groupedActivities[$currentTime][$day] as $activity) {
-                $this->get_cell_with_activity($this->calendar, $activity, $currentTime, 1);
+                $this->get_cell_with_activity($this->calendar, $activity, $currentTime, 1, "_" . $this->currentWeekDay);
             }
             echo "</div></td>";
         }

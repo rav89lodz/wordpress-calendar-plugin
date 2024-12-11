@@ -97,6 +97,10 @@ function modal_setup() {
     let my_modal = document.querySelector('#calendarFormModalCenter');
     if(calendar_form_table && my_modal) {
         let days = ["Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela"];
+        let days_names_array = document.querySelector('#days_names_array');
+        if(days_names_array) {
+            days = days_names_array.value.split('|,|');
+        }
         let get_rest_url = document.querySelector("#get_rest_url");
         let get_rest_url_value = null;
         if(get_rest_url) {
@@ -140,7 +144,7 @@ function modal_setup() {
             calendar_modal_hidden_id.value = null;
             calendar_modal_day_name_input.value = null;
             calendar_modal_hour_input.value = null;
-			window.scrollTo(0,0);
+            window.scrollTo(0,0);
         });
 
         calendar_form_table.addEventListener('click', (e) => {
@@ -156,9 +160,10 @@ function modal_setup() {
                 }
                 else {
                     let calendar_data = table_field.id.split('_');
-                    let date_from_span = document.querySelector('#header_' + calendar_data[2]);
+                    let calendar_data_index = calendar_data.length - 1;
+                    let date_from_span = document.querySelector('#header_' + calendar_data[calendar_data_index]);
                     if(date_from_span) {
-                        calendar_modal_day_name.innerText = date_from_span.innerText + " (" + days[calendar_data[2] - 1] + ")";
+                        calendar_modal_day_name.innerText = date_from_span.innerText + " (" + days[calendar_data[calendar_data_index] - 1] + ")";
                         calendar_modal_day_name_input.value = date_from_span.innerText;
                         calendar_modal_hour.innerText = calendar_data[1];
                         calendar_modal_hour_input.value = calendar_data[1];
@@ -213,7 +218,7 @@ function horizontal_grid_fluent(table) {
 
     data_elements.forEach((e) => {
         let dates = e.getAttribute('data-info').split('|');
-        let sum = sum_fluent_cells(data_hours, dates);
+        let sum = sum_fluent_cells(data_hours, dates, 'H');
         e.style.setProperty('--after-height', sum + 'px');
     });
 }
@@ -234,12 +239,12 @@ function vertical_grid_fluent(table) {
 
     data_elements.forEach((e) => {
         let dates = e.getAttribute('data-info').split('|');
-        let sum = sum_fluent_cells(data_hours, dates);
+        let sum = sum_fluent_cells(data_hours, dates, 'V');
         e.style.setProperty('--after-height', sum + 'px');
     });
 }
 
-function sum_fluent_cells(data_hours, dates) {
+function sum_fluent_cells(data_hours, dates, grid_direction) {
     let sum = 0;
     let last_hour_key = 0;
 
@@ -266,7 +271,10 @@ function sum_fluent_cells(data_hours, dates) {
         }
         sum += sum_for_interval(minutes1, next_hour[1]);
     }
-    
+
+    if(grid_direction == 'H') {
+        return sum;
+    }
     return sum - last_hour[1];
 }
 
