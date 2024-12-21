@@ -116,6 +116,10 @@ function create_options_page_for_calendar_plugin() {
                 ->set_option_value( '1' )
                 ->set_help_text( $langService->optionPage['main_menu_field12_description'] ),
 
+            Field::make( 'checkbox', 'calendar_plugin_start_time_on_grid', $langService->optionPage['main_menu_field20_name'] )
+                ->set_option_value( '1' )
+                ->set_help_text( $langService->optionPage['main_menu_field20_description'] ),
+
             Field::make( 'checkbox', 'calendar_plugin_end_time_on_grid', $langService->optionPage['main_menu_field4_name'] )
                 ->set_option_value( '1' )
                 ->set_help_text( $langService->optionPage['main_menu_field4_description'] ),

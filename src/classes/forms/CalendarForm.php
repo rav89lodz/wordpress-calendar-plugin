@@ -92,10 +92,20 @@ abstract class CalendarForm
         if($calendar->get_place_activity_on_grid() === true) {
             echo "<p class='text-wrap'>" . htmlspecialchars($activity->get_type()) . "</p>";
         }
-        
-        if($calendar->get_end_time_on_grid() === true) {
-            echo "<p>" . $this->langService->calendarLabels['label_activity_end_at'] . htmlspecialchars($activity->get_end_at()) . "</p>";
+
+        if($calendar->get_start_time_on_grid() === true && $calendar->get_end_time_on_grid() === true) {
+            echo "<p>" . $this->langService->calendarLabels['label_activity_from'] . " " . htmlspecialchars($activity->get_start_at()) . " "
+                . $this->langService->calendarLabels['label_activity_to'] . " " . htmlspecialchars($activity->get_end_at()) . "</p>";
         }
+
+        if($calendar->get_start_time_on_grid() === true && $calendar->get_end_time_on_grid() === false) {
+            echo "<p>" . $this->langService->calendarLabels['label_activity_start_at'] . " " . htmlspecialchars($activity->get_start_at()) . "</p>";
+        }
+        
+        if($calendar->get_start_time_on_grid() === false && $calendar->get_end_time_on_grid() === true) {
+            echo "<p>" . $this->langService->calendarLabels['label_activity_end_at'] . " " . htmlspecialchars($activity->get_end_at()) . "</p>";
+        }
+        
         echo "</div>";
     }
 

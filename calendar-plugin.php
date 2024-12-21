@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name:       Calendar Plugin
- * Plugin URI:        https://example.com/plugins/the-basics/
+ * Plugin URI:        https://github.com/rav89lodz/wordpress-calendar-plugin
  * Description:       Calendar Plugin for modern term reservation form
  * Version:           1.0.0
  * Requires at least: 6.6.2
@@ -10,10 +10,12 @@
  * Author:            Rafał Chęciński
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Update URI:        https://example.com/my-plugin/
+ * Update URI:        https://github.com/rav89lodz/wordpress-calendar-plugin
  * Text Domain:       calendar-plugin
  * Domain Path:       /languages
  */
+
+use CalendarPlugin\src\classes\Donate;
 
 if (! defined('ABSPATH')) {
     exit;
@@ -59,6 +61,20 @@ if (! class_exists('CalendarPlugin')) {
 
     $calendarPlugin = new CalendarPlugin;
     $calendarPlugin->initialize();
+
+    add_filter( 'plugin_action_links', function( $actions, $plugin_file ) {
+        static $plugin;
+
+        if (!isset($plugin)) {
+            $plugin = plugin_basename(__FILE__);
+        }
+        
+        if ($plugin == $plugin_file) {
+            $actions = array_merge(['settings' => '<a href="admin.php?page=calendar-options-global">' . __('Settings', 'General') . '</a>'], $actions);
+        }
+
+        return $actions;
+    }, 10, 5 );
 }
 
 /**

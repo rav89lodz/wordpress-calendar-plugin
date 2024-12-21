@@ -60,7 +60,7 @@ class CalendarOneDayForm extends CalendarForm
             for($min = 5; $min < $this->calendar->get_calendar_interval() - 4; $min += 5) {
                 $minute = date('H:i', strtotime("+$min minutes", $currentTime));
                 if (isset($activitiesGrouped[$minute])) {
-                    $this->print_row_with_data($activitiesGrouped, $minute, $this->currentWeekDay);
+                    $this->print_row_with_data_second_class($activitiesGrouped, $minute, $this->currentWeekDay);
                 }
             }
 
@@ -141,6 +141,28 @@ class CalendarOneDayForm extends CalendarForm
             echo "<td></td>";
         }
         echo "</tr>";
+    }
+
+    /**
+     * Print table row with data with minutes iterration
+     * 
+     * @param array groupedActivities
+     * @param string currentTime
+     * @param int day
+     * @return void
+     */
+    private function print_row_with_data_second_class($groupedActivities, $currentTime, $day) {    
+        if (! empty($groupedActivities[$currentTime][$day])) {
+            echo "<tr>";
+            echo "<td style='width:15%'>" . $currentTime . "</td>";
+
+            echo "<td><div class='flex-cell'>";
+            foreach ($groupedActivities[$currentTime][$day] as $activity) {
+                $this->get_cell_with_activity($this->calendar, $activity, $currentTime, 1, "_" . $this->currentWeekDay);
+            }
+            echo "</div></td>";
+            echo "</tr>";
+        }        
     }
 
     /**

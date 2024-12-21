@@ -50,11 +50,14 @@ return [
     ],
 
     'calendarLabels' => [
+        'label_activity_start_at' => 'Activity start time',
         'label_activity_end_at' => 'Activity end time',
         'default_success_message' => 'Message sent. Reservation confirmed',
         'default_error_message' => 'Message sent. Reservation rejected',
         'email_error_message' => 'Problem sending email message',
         'config_error' => 'Incorrect dates / times in calendar configuration',
+        'label_activity_from' => 'Activity time from',
+        'label_activity_to' => 'to',
     ],
 
     'modalFormFriendlyNames' => [
@@ -142,6 +145,8 @@ return [
         'main_menu_field18_description' => 'Specify the value for the calendar cell height in px according to CSS standards (e.g., 120px). Leave empty to use the default value: 130px.',
         'main_menu_field19_name' => 'Single day calendar view',
         'main_menu_field19_description' => 'Enable this option if you want to display the calendar in a single day view. The default view is a week view.',
+        'main_menu_field20_name' => 'Display activity start time',
+        'main_menu_field20_description' => 'Enable this option if you want the start time of the activity to be displayed on the tile.',
         'main_menu_textarea_field_placeholder' => 'Enter the message content',
         'short_code_activity_place' => 'Use this code (shortcode) to display the calendar with data for: ',
         'activity_place_title' => 'Activity locations',

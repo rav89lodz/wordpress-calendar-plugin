@@ -16,6 +16,7 @@ class CalendarModel
     private $calendarReservation;
     private $durationOnGrid;
     private $placeActivityOnGrid;
+    private $startTimeOnGrid;
     private $endTimeOnGrid;
     private $fulentCalendarGrid;
     private $horizontalCalendarGrid;
@@ -54,6 +55,7 @@ class CalendarModel
         $this->calendarReservation = $this->set_calendar_option('calendar_plugin_make_rsv_by_calendar');
         $this->durationOnGrid = $this->set_calendar_option('calendar_plugin_duration_time_on_grid');
         $this->placeActivityOnGrid = $this->set_calendar_option('calendar_plugin_activity_place_on_grid');
+        $this->startTimeOnGrid = $this->set_calendar_option('calendar_plugin_start_time_on_grid');
         $this->endTimeOnGrid = $this->set_calendar_option('calendar_plugin_end_time_on_grid');
         $this->fulentCalendarGrid = $this->set_calendar_option('calendar_plugin_fluent_calendar_grid');
         $this->horizontalCalendarGrid = $this->set_calendar_option('calendar_plugin_horizontal_calendar_grid');
@@ -161,6 +163,15 @@ class CalendarModel
      */
     public function get_place_activity_on_grid() {
         return $this->placeActivityOnGrid;
+    }
+
+    /**
+     * Get startTimeOnGrid
+     * 
+     * @return bool
+     */
+    public function get_start_time_on_grid() {
+        return $this->startTimeOnGrid;
     }
 
     /**

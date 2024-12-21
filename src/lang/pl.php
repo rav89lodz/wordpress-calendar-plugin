@@ -50,11 +50,14 @@ return [
     ],
 
     'calendarLabels' => [
-        'label_activity_end_at' => 'Godzina zakończenia ',
+        'label_activity_start_at' => 'Godzina rozpoczęcia',
+        'label_activity_end_at' => 'Godzina zakończenia',
         'default_success_message' => 'Wiadmość została wysłana. Rezerwacja dokonana',
         'default_error_message' => 'Wiadmość została wysłana. Rezerwacja odrzucona',
         'email_error_message' => 'Problem z wysłaniem wiadomości email',
         'config_error' => 'Błędne daty / godziny w konfiguracji kalendarza',
+        'label_activity_from' => 'Zajęcia od',
+        'label_activity_to' => 'do',
     ],
 
     'modalFormFriendlyNames' => [
@@ -142,6 +145,8 @@ return [
         'main_menu_field18_description' => 'Podaj wartość dla wysokości komórki kalendarza w px, zgodnie ze standardami CSS, np. 120px. Zostaw puste jeśli chcesz korzystać z wartości domyślnej: 130px',
         'main_menu_field19_name' => 'Kalendarz w widoku pojedynczego dnia',
         'main_menu_field19_description' => 'Włącz, jeśli chcesz pokazywać kalendarz w widoku pojedynczego dnia. Domyślna wartość to widok w ujęciu tygodnia',
+        'main_menu_field20_name' => 'Wyświetlanie godziny rozpoczęcia zajęć',
+        'main_menu_field20_description' => 'Włącz tę opcję, jeśli na kafelku zajęć ma pokazywać się godzina rozpoczęcia zajęć',
         'main_menu_textarea_field_placeholder' => 'Wpisz treść wiadomości',
         'short_code_activity_place' => 'Użyj tego kodu (short_code), żeby wyświetlić na stronie kalendarz z danymi dla: ',
         'activity_place_title' => 'Miejsca zajęć',
